@@ -2,6 +2,7 @@ package io.github.R3charged;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Coords;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +31,7 @@ public class Territories extends JavaPlugin {
 
     }
     static File dir= new Territories().getDataFolder();
-    public static HashMap<String,HashMap<Coords,Tile>> loadTiles(){
+    public static HashMap<String,HashMap<Coords, Tile>> loadTiles(){
         HashMap<String,HashMap<Coords,Tile>> tileMap=new HashMap<String,HashMap<Coords,Tile>>();
         Gson gson=new Gson();
         List<World> worlds= new Territories().getServer().getWorlds();
