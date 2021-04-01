@@ -2,16 +2,17 @@ package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.TileManager;
+import org.bukkit.Chunk;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Command implements CommandExecutor {
+public abstract class Command implements CommandExecutor{
 
-    protected int x,z;
-    protected String world;
+    protected Tile tile;
 
     protected Player sender;
     /**
@@ -26,26 +27,30 @@ public abstract class Command implements CommandExecutor {
             return true;
         }
         this.sender = (Player) sender;
-        getTokens(String.join(" ",args)); //TODO add incorrect params check
-        Tile tile = TileManager.getTile(x,z,world);
+        if(!getTokens(args)){
+
+            return false;
+        }
         exeCmd();
-        return false;
+        return true;
     }
 
-    protected void getTokens(String args) { //TODO add exception catch
-        Scanner sc = new Scanner(args);
-        if(!sc.hasNextInt()) {
-            return;
+
+    protected boolean getTokens(String[] args) {
+        if(args.length==0){ //
+            Chunk chunk = sender.getLocation().getChunk();
+            tile = TileManager.getTile(chunk.getX(),chunk.getZ(),chunk.getWorld().getName());
         }
-        x = sc.nextInt();
-        if(!sc.hasNextInt()) {
-            return;
+        try{
+            int x = Integer.parseInt(args[0]);
+            int z = Integer.parseInt(args[1]);
+            String world = args[2]; //TODO cast to world name and catch statement for failure
+
+            tile = TileManager.getTile(x,z,world);
+        } catch(NumberFormatException|ArrayIndexOutOfBoundsException e){
+            return false;
         }
-        z = sc.nextInt();
-        if(!sc.hasNext()) {
-            return;
-        }
-        world = sc.next();
+        return true;
     }
 
 }

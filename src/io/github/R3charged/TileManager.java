@@ -24,7 +24,7 @@ public final class TileManager implements Saveable {
     public static Tile getTile(int x, int z, String world) {
         Coords coords = new Coords(x,z);
         if(!tileMap.get(world).containsKey(coords)) { //when map doesn't contain this tile.
-            Tile tile = new PlayerTile();
+            Tile tile = new PlayerTile(x, z, world);
             tileMap.get(world).put(coords, tile);
             return tile;
         }

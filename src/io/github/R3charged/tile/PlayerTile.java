@@ -1,6 +1,7 @@
 package io.github.R3charged.tile;
 
 import io.github.R3charged.ProfileManager;
+import io.github.R3charged.utility.Coords;
 import io.github.R3charged.utility.Status;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -8,21 +9,42 @@ import org.bukkit.Server;
 
 import java.util.UUID;
 
-public class PlayerTile extends Tile{
+public class PlayerTile extends Tile {
 
     private UUID owner;//change to more appropriate name
-    private long time, contestDecay, estimate; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
+    private long time, contestDecay, estimate, afkDecay; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
     private Status status;
+
+    public PlayerTile(int x, int z, String world) {
+        super(x, z, world);
+    }
 
     public UUID getOwner() {
         return owner;
     }
 
+    public void setOwner(UUID u) {
+        ProfileManager.getProfile(owner).removeTile(getX(),getZ(),getWorld());
+        owner = u;
+        ProfileManager.getProfile(u).addTile(getX(),getZ(),getWorld());
+    }
+
     /**
      * Adds or removes time based on relation to tile owner
      */
-    public void affectTime(int ms){ //TODO or maybe grab from the hashmap of times
-
+    private void affectTime(UUID u, long ms){ //helper method for actual affectTime
+        if(canContribute(u)) {
+            time += ms;
+        } else if(status.equals(Status.free)) { //extraneous on soft owned
+            time -= ms;
+        } else if(true) { //contest
+            contestDecay += ms;
+        }
+        if(getValue() < 0 ) { //ownership gets overturned
+            time = ms;
+            contestDecay = 0;
+            afkDecay = 0;
+        }
     }
     /**
      * Calculates the net value of the tile.
@@ -40,7 +62,7 @@ public class PlayerTile extends Tile{
      * Returns true when {@code u} owns the tile,
      * or if they have admin override enabled.
      * @param u who is trying to modify the tile
-     * @return true if {@code u} can modify the tile
+     * @return true if {@code u} can modify the tile configurations
      */
     public boolean canModify(UUID u) { //when player owns this tile or is admin
         if(u.equals(owner)){
@@ -50,6 +72,16 @@ public class PlayerTile extends Tile{
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns true when {@code u} is allowed to contribute to the tile.
+     * Contributing to the tile is defined as adding value, building, and destroying.
+     * @param u who is trying to contribute to the tile.
+     * @return true if {@code u} can contribute to the tile.
+     */
+    public boolean canContribute(UUID u) {
+        return u.equals(owner) || ProfileManager.areFriends(owner, u);
     }
 
     public boolean isFree() {
@@ -80,4 +112,5 @@ public class PlayerTile extends Tile{
     public String getOwnerName() {
         return Bukkit.getOfflinePlayer(owner).getName();
     }
+
 }

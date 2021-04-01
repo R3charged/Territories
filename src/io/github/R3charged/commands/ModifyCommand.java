@@ -4,18 +4,45 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.TileManager;
 
+import java.lang.reflect.Array;
+
 public abstract class ModifyCommand extends Command{
 
     private enum Mode {
         FILL, THIS, ALL
     }
-    private Mode mode = Mode.THIS;
+    private Mode mode;
 
     protected abstract void exeCmd(Tile tile);
 
     @Override
-    protected void getTokens(String args) {
+    protected boolean getTokens(String[] args) {
+        if(args.length==0){ //args is empty
+            mode = Mode.THIS;
+        }
+        else {
+            try{ //moves it to tile parsing if element is a number
+                Integer.parseInt(args[0]);
+                mode = Mode.THIS;
+            } catch(NumberFormatException e){ //if not a number
+                try{ //if is a proper mode
+                    mode = Mode.valueOf(args[0]);
+                    args=trimFirst(args);
+                } catch(IllegalArgumentException ila){
+                    return false;
+                }
+
+            }
+        }
         super.getTokens(args);
+        return true;
+    }
+    protected String[] trimFirst(String[] arr){
+        String[] str = new String[arr.length-1];
+        for(int i=1;i<arr.length;i++){
+            str[i-1]=arr[i];
+        }
+        return str;
     }
 
     protected final void exeCmd(){
@@ -27,14 +54,14 @@ public abstract class ModifyCommand extends Command{
                 doThis();
                 break;
             case FILL:
-                doFill(x,z);
+                doFill(tile.getX(),tile.getZ());
                 break;
         }
     }
 
     private void doThis() {
-        PlayerTile tile = (PlayerTile) TileManager.getTile(x, z, world);
-        if(tile.canModify(sender.getUniqueId())) {
+        PlayerTile ptile = (PlayerTile) tile;
+        if(ptile.canModify(sender.getUniqueId())) {
             exeCmd(tile);
         }
     }
@@ -46,8 +73,8 @@ public abstract class ModifyCommand extends Command{
     }
 
     private void doFill(int x,int z) {
-        PlayerTile tile = (PlayerTile) TileManager.getTile(x,z,world);
-        if(tile.canModify(sender.getUniqueId())) {
+        PlayerTile tile = (PlayerTile) TileManager.getTile(x,z,this.tile.getWorld());
+        if(tile.canModify(sender.getUniqueId())) { //TODO conditions need to be changed
             exeCmd(tile);
             doFill(x+1,z);
             doFill(x-1,z);

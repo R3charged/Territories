@@ -13,7 +13,6 @@ public class Inspect extends Command{
 
     @Override
     protected void exeCmd() {
-        Tile tile = TileManager.getTile(x,z,world);
         if(tile instanceof PlayerTile){
             PlayerTile ptile = (PlayerTile) tile;
             sender.spigot().sendMessage(message(ptile));
@@ -36,8 +35,7 @@ public class Inspect extends Command{
                 msg.addExtra(button("Unclaim", "unclaim"));
                 msg.addExtra(button("Transfer", "transfer"));
             }
-        }
-        else if(!ptile.isFree()){
+        } else if(!ptile.isFree()) {
             msg.addExtra(button("Contest", "contest")); //TODO contest has no ALL option
         }
         msg.addExtra("\n"+line);
@@ -45,6 +43,8 @@ public class Inspect extends Command{
     }
 
     private TextComponent header(PlayerTile ptile){
+        int x = ptile.getX();
+        int z = ptile.getZ();
         TextComponent line = new TextComponent(ptile.getColor()+"\u2b1b"+ChatColor.RESET+ptile.getTitle());
         TextComponent subtitle = new TextComponent(ChatColor.GRAY+"\n["+x+", "+z+"] "+ptile.getOwnerName());
         line.addExtra(subtitle);
@@ -52,6 +52,9 @@ public class Inspect extends Command{
     }
 
     private TextComponent button(String label,String command){
+        int x = tile.getX();
+        int z = tile.getZ();
+        String world = tile.getWorld();
         TextComponent line = new TextComponent("\n"+label+": ");
         TextComponent txt = new TextComponent(ChatColor.BOLD+"[THIS]");
         txt.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/"+command+" THIS "+x+" "+z+" "+world));

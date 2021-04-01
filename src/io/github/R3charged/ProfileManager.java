@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class ProfileManager implements Saveable {
     private static HashMap<UUID,Profile> profileMap;
-
     /**
      *  Returns a profile for the indicated player. If the player does not have a profile,
      *  then a new one is created.
@@ -21,6 +20,15 @@ public class ProfileManager implements Saveable {
             return profile;
         }
         return profileMap.get(uuid);
+    }
+
+    public static boolean areFriends(UUID u, UUID v) { //TODO maybe make this its own class?
+        Profile one = getProfile(u);
+        Profile two = getProfile(v);
+        if(one.hasFriended(v) && two.hasFriended(u)){
+            return true;
+        }
+        return false;
     }
 
     /**
