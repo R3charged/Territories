@@ -1,12 +1,16 @@
 package io.github.R3charged.tile;
 
+import io.github.R3charged.Profile;
 import io.github.R3charged.ProfileManager;
+import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.utility.Coords;
+import io.github.R3charged.utility.Loc;
 import io.github.R3charged.utility.Status;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerTile extends Tile {
@@ -15,8 +19,19 @@ public class PlayerTile extends Tile {
     private long time, contestDecay, estimate, afkDecay; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
     private Status status;
 
-    public PlayerTile(int x, int z, String world) {
-        super(x, z, world);
+    public static PlayerTile add(Loc i) {
+        HashMap<Loc, Tile> map = TileMap.get();
+        if(!map.containsKey(i)) {
+            map.put(i,new PlayerTile());
+        }
+        return (PlayerTile) map.get(i);
+    }
+
+    public PlayerTile() {
+        status = Status.free;
+    }
+    public PlayerTile(UUID owner, long time) {
+        affectTime(owner, time);
     }
 
     public UUID getOwner() {
@@ -24,14 +39,18 @@ public class PlayerTile extends Tile {
     }
 
     public void setOwner(UUID u) {
-        ProfileManager.getProfile(owner).removeTile(getX(),getZ(),getWorld());
+        //ProfileManager.getProfile(owner).removeTile(getX(),getZ(),getWorld());
         owner = u;
-        ProfileManager.getProfile(u).addTile(getX(),getZ(),getWorld());
+        //ProfileManager.getProfile(u).addTile(getX(),getZ(),getWorld());
     }
 
     /**
      * Adds or removes time based on relation to tile owner
      */
+    public void affectTime(UUID u) {
+        affectTime(u, Profile.get(u).getOnline().updateTimer());
+    }
+
     private void affectTime(UUID u, long ms){ //helper method for actual affectTime
         if(canContribute(u)) {
             time += ms;
@@ -46,6 +65,8 @@ public class PlayerTile extends Tile {
             afkDecay = 0;
         }
     }
+
+
     /**
      * Calculates the net value of the tile.
      * @return Total Value of Tile
@@ -80,8 +101,8 @@ public class PlayerTile extends Tile {
      * @param u who is trying to contribute to the tile.
      * @return true if {@code u} can contribute to the tile.
      */
-    public boolean canContribute(UUID u) {
-        return u.equals(owner) || ProfileManager.areFriends(owner, u);
+    public boolean canContribute(UUID u) { //TODO
+        return u.equals(owner) || u == null || Profile.areFriends(owner, u);
     }
 
     public boolean isFree() {

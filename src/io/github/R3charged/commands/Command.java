@@ -1,18 +1,15 @@
 package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.Tile;
-import io.github.R3charged.TileManager;
+import io.github.R3charged.utility.Loc;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Command implements CommandExecutor{
 
-    protected Tile tile;
+    protected Loc loc;
 
     protected Player sender;
     /**
@@ -39,14 +36,14 @@ public abstract class Command implements CommandExecutor{
     protected boolean getTokens(String[] args) {
         if(args.length==0){ //
             Chunk chunk = sender.getLocation().getChunk();
-            tile = TileManager.getTile(chunk.getX(),chunk.getZ(),chunk.getWorld().getName());
+            loc = new Loc(chunk.getX(),chunk.getZ(),chunk.getWorld().getName());
         }
         try{
             int x = Integer.parseInt(args[0]);
             int z = Integer.parseInt(args[1]);
             String world = args[2]; //TODO cast to world name and catch statement for failure
 
-            tile = TileManager.getTile(x,z,world);
+            loc = new Loc(x,z,world);
         } catch(NumberFormatException|ArrayIndexOutOfBoundsException e){
             return false;
         }

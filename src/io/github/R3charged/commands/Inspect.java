@@ -1,6 +1,5 @@
 package io.github.R3charged.commands;
 
-import io.github.R3charged.TileManager;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import net.md_5.bungee.api.ChatColor;
@@ -13,15 +12,20 @@ public class Inspect extends Command{
 
     @Override
     protected void exeCmd() {
+
+        Tile tile = Tile.get(loc);
         if(tile instanceof PlayerTile){
             PlayerTile ptile = (PlayerTile) tile;
-            sender.spigot().sendMessage(message(ptile));
+            sender.sendMessage(loc.getX() + " " + loc.getZ() + " " + loc.getWorld() + "\n" +
+                    "V: " + ptile.getValue());
+            //sender.spigot().sendMessage(message(ptile));
         }
 
 
 
     }
 
+    /*
     private TextComponent message(PlayerTile ptile){
         TextComponent msg = header(ptile);
         msg.addExtra("\n"+line);
@@ -74,4 +78,6 @@ public class Inspect extends Command{
         }
         return line;
     }
+
+     */
 }

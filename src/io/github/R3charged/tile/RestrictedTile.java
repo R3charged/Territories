@@ -7,9 +7,6 @@ public class RestrictedTile extends Tile {
 
     private ChatColor color;
 
-    public RestrictedTile(int x, int z, String world) {
-        super(x, z, world);
-    }
     @Override
     public ChatColor getColor() {
         return color;

@@ -2,6 +2,8 @@ package io.github.R3charged;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.R3charged.commands.Inspect;
+import io.github.R3charged.listeners.TileListener;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Coords;
 import org.bukkit.World;
@@ -24,13 +26,13 @@ public class Territories extends JavaPlugin {
         //Fired when the server enables the plugin
     }
 
-    public static void registerCommands(){
-
+    public void registerCommands(){
+        this.getCommand("inspect").setExecutor(new Inspect());
     }
-    public static void registerListeners(){
-
+    public void registerListeners(){
+        getServer().getPluginManager().registerEvents(new TileListener(), this);
     }
-    static File dir= new Territories().getDataFolder();
+    /* static File dir= this.getDataFolder();
     public static HashMap<String,HashMap<Coords, Tile>> loadTiles(){
         HashMap<String,HashMap<Coords,Tile>> tileMap=new HashMap<String,HashMap<Coords,Tile>>();
         Gson gson=new Gson();
@@ -78,5 +80,5 @@ public class Territories extends JavaPlugin {
     }
     public static void saveProfiles(){
 
-    }
+    }*/
 }

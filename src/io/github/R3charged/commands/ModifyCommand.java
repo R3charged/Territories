@@ -2,9 +2,7 @@ package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
-import io.github.R3charged.TileManager;
-
-import java.lang.reflect.Array;
+import io.github.R3charged.utility.Loc;
 
 public abstract class ModifyCommand extends Command{
 
@@ -54,26 +52,29 @@ public abstract class ModifyCommand extends Command{
                 doThis();
                 break;
             case FILL:
-                doFill(tile.getX(),tile.getZ());
+                doFill(loc.getX(),loc.getZ());
                 break;
         }
     }
 
     private void doThis() {
-        PlayerTile ptile = (PlayerTile) tile;
+        PlayerTile ptile = (PlayerTile) Tile.get(loc);
         if(ptile.canModify(sender.getUniqueId())) {
-            exeCmd(tile);
+            exeCmd(ptile);
         }
     }
 
     private void doAll() {
+        /*
         for(Tile tile: TileManager.getTilesOf(sender.getUniqueId())) {
             exeCmd(tile);
         }
+
+         */
     }
 
     private void doFill(int x,int z) {
-        PlayerTile tile = (PlayerTile) TileManager.getTile(x,z,this.tile.getWorld());
+        PlayerTile tile = (PlayerTile) Tile.get(new Loc(x,z,loc.getWorld()));
         if(tile.canModify(sender.getUniqueId())) { //TODO conditions need to be changed
             exeCmd(tile);
             doFill(x+1,z);
