@@ -1,7 +1,10 @@
 package io.github.R3charged.collections;
 
 import com.google.gson.*;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import io.github.R3charged.Territories;
+import io.github.R3charged.tile.PlayerTile;
+import io.github.R3charged.tile.RestrictedTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.World;
@@ -17,7 +20,7 @@ import java.util.function.BiConsumer;
 public class TileMap {
 
     private static File dir = new File(Territories.get().getDataFolder() + "\\saves");
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Tile.class, new InterfaceAdapter<Tile>()).create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(getTypeFactory()).create();
 
 
 
@@ -81,6 +84,13 @@ public class TileMap {
 
     private static File getPath(Loc l) {
         return new File(dir + l.getPath());
+    }
+
+    private static RuntimeTypeAdapterFactory<Tile> getTypeFactory() {
+        RuntimeTypeAdapterFactory<Tile> typeFactory = RuntimeTypeAdapterFactory.of(Tile.class, "type")
+                .registerSubtype(PlayerTile.class, "player")
+                .registerSubtype(RestrictedTile.class, "restricted");
+        return typeFactory;
     }
 
     private static class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
