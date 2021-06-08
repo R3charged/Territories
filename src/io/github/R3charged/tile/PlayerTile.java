@@ -22,16 +22,14 @@ public class PlayerTile extends Tile {
     public static PlayerTile add(Loc i) {
         HashMap<Loc, Tile> map = TileMap.get();
         if(!map.containsKey(i)) {
-            map.put(i,new PlayerTile());
+            map.put(i,new PlayerTile(i));
         }
         return (PlayerTile) map.get(i);
     }
 
-    public PlayerTile() {
+    public PlayerTile(Loc l) {
+        super(l);
         status = Status.free;
-    }
-    public PlayerTile(UUID owner, long time) {
-        affectTime(owner, time);
     }
 
     public UUID getOwner() {
@@ -102,7 +100,7 @@ public class PlayerTile extends Tile {
      * @return true if {@code u} can contribute to the tile.
      */
     public boolean canContribute(UUID u) { //TODO
-        return u.equals(owner) || u == null || Profile.areFriends(owner, u);
+        return u.equals(owner) || owner == null || Profile.areFriends(owner, u);
     }
 
     public boolean isFree() {

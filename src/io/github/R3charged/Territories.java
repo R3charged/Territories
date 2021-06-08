@@ -2,6 +2,7 @@ package io.github.R3charged;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.commands.Inspect;
 import io.github.R3charged.listeners.TileListener;
 import io.github.R3charged.tile.Tile;
@@ -16,14 +17,26 @@ import java.util.List;
 import java.util.UUID;
 
 public class Territories extends JavaPlugin {
+
+    private static Territories i;
+    {
+        i = this;
+    }
+
+    public static Territories get() {
+        return i;
+    }
+
     @Override
     public void onEnable(){
+        this.getDataFolder().mkdir();
         registerCommands();
         registerListeners();
     }
     @Override
     public void onDisable(){
         //Fired when the server enables the plugin
+        TileMap.serialize();
     }
 
     public void registerCommands(){

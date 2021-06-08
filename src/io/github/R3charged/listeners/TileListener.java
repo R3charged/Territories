@@ -1,6 +1,7 @@
 package io.github.R3charged.listeners;
 
 import io.github.R3charged.Profile;
+import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
@@ -26,6 +27,7 @@ public class TileListener implements Listener {
             ptile.affectTime(e.getPlayer().getUniqueId());
 
             Chat.debug("Left " + ptile.getValue());
+            TileMap.serialize();
             /*
             Player p= e.getPlayer();
             getTileAdd(e.getFrom()).update(p.getUniqueId());

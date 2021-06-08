@@ -3,3 +3,8 @@ version: 1.2
 author: R3charged
 main: io.github.R3charged.Territories
 api-version: 1.16
+
+commands:
+    inspect:
+        description: Inspect the properties of a chunk.
+        usage: /<command>
