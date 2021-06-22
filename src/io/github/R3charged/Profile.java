@@ -39,7 +39,7 @@ public class Profile {
     }
 
     public Profile() {
-
+        mapColor = ChatColor.GREEN;
     }
 
     /**

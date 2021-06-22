@@ -8,3 +8,6 @@ commands:
     inspect:
         description: Inspect the properties of a chunk.
         usage: /<command>
+    map:
+        description: Shows a map of surrounding chunks.
+        usage: /<command>

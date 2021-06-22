@@ -1,66 +1,71 @@
 package io.github.R3charged.commands;
 
+import io.github.R3charged.enums.Select;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 
-public abstract class ModifyCommand extends Command{
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    private enum Mode {
-        FILL, THIS, ALL
-    }
-    private Mode mode;
+public abstract class ModifyCommand<T extends Tile> extends Command{
 
-    protected abstract void exeCmd(Tile tile);
+    protected Select mode = getDefaultMode();
+
+    private final String MODE_PTRN = "^(\\D+)";
+
+
+    /**
+     * Method for executing command. Returns true when command has successfully executed.
+     * Returns false if conditions do not pass.
+     * @param tile target tile
+     * @return true on sucessful execution
+     */
+    protected abstract boolean exeCmd(T tile);
 
     @Override
-    protected boolean getTokens(String[] args) {
-        if(args.length==0){ //args is empty
-            mode = Mode.THIS;
-        }
-        else {
-            try{ //moves it to tile parsing if element is a number
-                Integer.parseInt(args[0]);
-                mode = Mode.THIS;
-            } catch(NumberFormatException e){ //if not a number
-                try{ //if is a proper mode
-                    mode = Mode.valueOf(args[0]);
-                    args=trimFirst(args);
-                } catch(IllegalArgumentException ila){
-                    return false;
-                }
+    protected boolean getArguements(String arg) {
+        if(arg.length() == 0) {
 
+        }
+        else if(arg.matches(MODE_PTRN)) {
+            Matcher m = Pattern.compile(MODE_PTRN).matcher(arg);
+            m.find();
+            try {
+                mode = Select.valueOf(m.group(1).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                sender.sendMessage("That is not a mode.");
+                return false;
             }
         }
-        super.getTokens(args);
-        return true;
-    }
-    protected String[] trimFirst(String[] arr){
-        String[] str = new String[arr.length-1];
-        for(int i=1;i<arr.length;i++){
-            str[i-1]=arr[i];
-        }
-        return str;
+        return super.getArguements(arg.replaceFirst(MODE_PTRN,""));
     }
 
     protected final void exeCmd(){
-        switch(mode){
-            case ALL:
-                doAll();
-                break;
-            case THIS:
-                doThis();
-                break;
-            case FILL:
-                doFill(loc.getX(),loc.getZ());
-                break;
+        try {
+            switch (mode) {
+                case ALL:
+                    doAll();
+                    break;
+                case THIS:
+                    doThis();
+                    break;
+                case FILL:
+                    doFill(loc.getX(), loc.getZ());
+                    break;
+            }
+        } catch (ClassCastException cce) {
+            Chat.error(sender ,"This command cannot be used on this chunk.");
         }
     }
 
     private void doThis() {
-        PlayerTile ptile = (PlayerTile) Tile.get(loc);
-        if(ptile.canModify(sender.getUniqueId())) {
-            exeCmd(ptile);
+        T t = (T) Tile.get(loc);
+
+        if(t.canModify(sender.getUniqueId())) {
+            exeCmd(t);
         }
     }
 
@@ -71,23 +76,28 @@ public abstract class ModifyCommand extends Command{
         }
 
          */
+        Chat.debug("doAll is unimplemented.");
     }
 
     private void doFill(int x,int z) {
-        PlayerTile tile = (PlayerTile) Tile.get(new Loc(x,z,loc.getWorld()));
-        if(tile.canModify(sender.getUniqueId())) { //TODO conditions need to be changed
-            exeCmd(tile);
+        T tile = (T) Tile.get(new Loc(x,z,loc.getWorld()));
+        if(tile.canModify(sender.getUniqueId()) && exeCmd(tile)) { //TODO conditions need to be change
             doFill(x+1,z);
             doFill(x-1,z);
             doFill(x,z+1);
             doFill(x,z-1);
         }
-        else if(tile.isFree()) {
+        else if (tile.canModify(sender.getUniqueId())) {
             doEdge(tile);
         }
     }
 
-    protected void doEdge(Tile tile) {
+    protected Select getDefaultMode() {
+        return Select.THIS;
+    }
+
+    protected void doEdge(T tile) {
         //empty
     }
+
 }

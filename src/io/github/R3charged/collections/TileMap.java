@@ -69,10 +69,10 @@ public class TileMap {
             try {
                 File dest = getPath(l); // 1,1.json
                 FileWriter writer = new FileWriter(dest);
-                gson.toJson(t, writer);
+                gson.toJson(t, Tile.class, writer);
                 writer.close();
             } catch (Exception e) {
-
+                System.out.println("Unable to save tile data.");
             }
         };
 

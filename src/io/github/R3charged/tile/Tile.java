@@ -1,14 +1,10 @@
 package io.github.R3charged.tile;
 
+import io.github.R3charged.Profile;
 import io.github.R3charged.collections.TileMap;
-import io.github.R3charged.utility.Coords;
 import io.github.R3charged.utility.Loc;
-import io.github.R3charged.utility.Status;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Location;
 
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Tile {
@@ -40,6 +36,10 @@ public abstract class Tile {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean canModify(UUID u) {
+        return Profile.get(u).isOverride();
     }
 
     public void setTitle(String title) {

@@ -1,17 +1,23 @@
 package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public abstract class Command implements CommandExecutor{
 
     protected Loc loc;
-
     protected Player sender;
+
+    private static final Pattern LOC_PTRN = Pattern.compile("(\\d+)\\s(\\d+)\\s(\\D+)");
+
     /**
      * Performs command action.
      */
@@ -24,8 +30,8 @@ public abstract class Command implements CommandExecutor{
             return true;
         }
         this.sender = (Player) sender;
-        if(!getTokens(args)){
-
+        if(!getArguements(String.join(" ", args))) {
+            Chat.debug("Command tokens error");
             return false;
         }
         exeCmd();
@@ -33,21 +39,20 @@ public abstract class Command implements CommandExecutor{
     }
 
 
-    protected boolean getTokens(String[] args) {
-        if(args.length==0){ //
+    protected boolean getArguements(String arg) {
+
+        if(arg.length()==0){ //
             Chunk chunk = sender.getLocation().getChunk();
             loc = new Loc(chunk.getX(),chunk.getZ(),chunk.getWorld().getName());
+            return true;
         }
-        try{
-            int x = Integer.parseInt(args[0]);
-            int z = Integer.parseInt(args[1]);
-            String world = args[2]; //TODO cast to world name and catch statement for failure
-
-            loc = new Loc(x,z,world);
-        } catch(NumberFormatException|ArrayIndexOutOfBoundsException e){
-            return false;
+        Matcher m = LOC_PTRN.matcher(arg);
+        if(m.matches()) {
+            m.find();
+            loc = new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

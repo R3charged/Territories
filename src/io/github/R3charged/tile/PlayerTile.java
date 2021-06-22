@@ -1,19 +1,18 @@
 package io.github.R3charged.tile;
 
 import io.github.R3charged.Profile;
-import io.github.R3charged.ProfileManager;
 import io.github.R3charged.collections.TileMap;
-import io.github.R3charged.utility.Coords;
 import io.github.R3charged.utility.Loc;
-import io.github.R3charged.utility.Status;
+import io.github.R3charged.enums.Status;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerTile extends Tile {
+
+    private final long CLAIM_VALUE = 30000;
 
     private UUID owner;//change to more appropriate name
     private long time, contestDecay, estimate, afkDecay; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
@@ -29,7 +28,7 @@ public class PlayerTile extends Tile {
 
     public PlayerTile(Loc l) {
         super(l);
-        status = Status.free;
+        status = Status.FREE;
     }
 
     public UUID getOwner() {
@@ -52,7 +51,7 @@ public class PlayerTile extends Tile {
     private void affectTime(UUID u, long ms){ //helper method for actual affectTime
         if(canContribute(u)) {
             time += ms;
-        } else if(status.equals(Status.free)) { //extraneous on soft owned
+        } else if(status.equals(Status.FREE)) { //extraneous on soft owned
             time -= ms;
         } else if(true) { //contest
             contestDecay += ms;
@@ -87,7 +86,7 @@ public class PlayerTile extends Tile {
         if(u.equals(owner)){
             return true;
         }
-        else if(ProfileManager.getProfile(u).isOverride()){
+        else if(Profile.get(u).isOverride()){
             return true;
         }
         return false;
@@ -107,9 +106,17 @@ public class PlayerTile extends Tile {
         return true;
     }
 
+    public boolean canClaim(UUID u) {
+        return u.equals(owner) && getValue() > CLAIM_VALUE && !status.equals(Status.CLAIM);
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public ChatColor getColor() {
-        return ProfileManager.getProfile(owner).getMapColor();
+        return Profile.get(owner).getMapColor();
     }
 
     @Override
