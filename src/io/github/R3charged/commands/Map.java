@@ -1,5 +1,6 @@
 package io.github.R3charged.commands;
 
+import io.github.R3charged.Profile;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.RestrictedTile;
 import io.github.R3charged.tile.Tile;
@@ -10,9 +11,9 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
-public class Map extends Command{
+public class Map extends TileCommand {
 
     private final String TILE_CHAR = "\u2b1b";
     private final String EMPTY_CHAR = "\u2b1c";
@@ -61,7 +62,7 @@ public class Map extends Command{
             return drawTile((RestrictedTile) t);
         } else { //null case
             TextComponent empty = new TextComponent(EMPTY_CHAR);
-            empty.setColor(net.md_5.bungee.api.ChatColor.DARK_GRAY);
+            empty.setColor(ChatColor.DARK_GRAY);
             return empty;
         }
     }
@@ -69,8 +70,25 @@ public class Map extends Command{
     private TextComponent drawTile(PlayerTile t) {
         TextComponent tile = new TextComponent(TILE_CHAR);
 
+        switch(t.getStatus()) {
+            case FREE:
+                if(t.canClaim(sender.getUniqueId()))
+                {
+                    tile.setColor(ChatColor.GRAY);
+                } else {
+                    tile.setColor(ChatColor.DARK_GRAY);
+                }
+                break;
+            case PAD:
+                tile.setColor(ChatColor.WHITE);
+                break;
+            case CLAIM:
+                tile.setColor(Profile.get(t.getOwner()).getMapColor().asBungee());
+                break;
+        }
+
         tile.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT,
-                new Text(t.getLoc().getX()+","+t.getLoc().getZ() +"\n" +
+                new Text(t.getLoc().getX()+","+t.getLoc().getZ()  +"\n" +
                         Bukkit.getOfflinePlayer(t.getOwner()).getName()+ " V: " + t.getValue())));
         tile.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/inspect "+t.getLoc().getX()+" "+t.getLoc().getZ()+" "+loc.getWorld()));
         return tile;

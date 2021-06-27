@@ -2,11 +2,13 @@ package io.github.R3charged.tile;
 
 import io.github.R3charged.Profile;
 import io.github.R3charged.collections.TileMap;
+import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 import io.github.R3charged.enums.Status;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -17,10 +19,12 @@ public class PlayerTile extends Tile {
     private UUID owner;//change to more appropriate name
     private long time, contestDecay, estimate, afkDecay; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
     private Status status;
+    private Date lastVisited;
 
     public static PlayerTile add(Loc i) {
         HashMap<Loc, Tile> map = TileMap.get();
         if(!map.containsKey(i)) {
+            Chat.debug("Tile added.");
             map.put(i,new PlayerTile(i));
         }
         return (PlayerTile) map.get(i);
@@ -29,6 +33,7 @@ public class PlayerTile extends Tile {
     public PlayerTile(Loc l) {
         super(l);
         status = Status.FREE;
+        lastVisited = new Date();
     }
 
     public UUID getOwner() {
@@ -36,9 +41,10 @@ public class PlayerTile extends Tile {
     }
 
     public void setOwner(UUID u) {
-        //ProfileManager.getProfile(owner).removeTile(getX(),getZ(),getWorld());
+        if(owner != null)
+        Profile.get(owner).removeTile(getLoc());
         owner = u;
-        //ProfileManager.getProfile(u).addTile(getX(),getZ(),getWorld());
+        Profile.get(owner).addTile(getLoc());
     }
 
     /**
@@ -51,6 +57,7 @@ public class PlayerTile extends Tile {
     private void affectTime(UUID u, long ms){ //helper method for actual affectTime
         if(canContribute(u)) {
             time += ms;
+            updateLastVisited();
         } else if(status.equals(Status.FREE)) { //extraneous on soft owned
             time -= ms;
         } else if(true) { //contest
@@ -63,13 +70,22 @@ public class PlayerTile extends Tile {
         }
     }
 
+    private void updateLastVisited() {
+        lastVisited = new Date();
+    }
+
+    private long getAfkDecay() {
+        //afkDecay = formula TODO
+        return 0;
+    }
+
 
     /**
      * Calculates the net value of the tile.
      * @return Total Value of Tile
      */
     public long getValue() {
-        return time + estimate - contestDecay;
+        return time + estimate - contestDecay - getAfkDecay();
     }
 
     public void evaluate(){
@@ -99,11 +115,18 @@ public class PlayerTile extends Tile {
      * @return true if {@code u} can contribute to the tile.
      */
     public boolean canContribute(UUID u) { //TODO
-        return u.equals(owner) || owner == null || Profile.areFriends(owner, u);
+        if(owner == null) {
+            setOwner(u);
+        }
+        return u.equals(owner) || Profile.areFriends(owner, u) || Profile.get(u).isOverride();
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public boolean isFree() {
-        return true;
+        return status == Status.FREE;
     }
 
     public boolean canClaim(UUID u) {

@@ -3,7 +3,7 @@ package io.github.R3charged.tile;
 import io.github.R3charged.Profile;
 import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.utility.Loc;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 import java.util.UUID;
 
@@ -41,6 +41,8 @@ public abstract class Tile {
     public boolean canModify(UUID u) {
         return Profile.get(u).isOverride();
     }
+
+    public abstract boolean canContribute(UUID u);
 
     public void setTitle(String title) {
         this.title = title;

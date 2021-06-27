@@ -1,5 +1,5 @@
 name: Territories
-version: 1.2
+version: 1.5
 author: R3charged
 main: io.github.R3charged.Territories
 api-version: 1.16
@@ -10,4 +10,13 @@ commands:
         usage: /<command>
     map:
         description: Shows a map of surrounding chunks.
+        usage: /<command>
+    claim:
+        description: Claim a chunk for yourself.
+        usage: /<command>
+    friend:
+        description: Add a player as a friend, who can build and contribute to your chunks.
+        usage: /<command>
+    unfriend:
+        description: Remove a player as a friend.
         usage: /<command>

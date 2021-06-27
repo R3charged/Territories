@@ -2,7 +2,8 @@ package io.github.R3charged;
 
 import io.github.R3charged.collections.ProfileMap;
 import io.github.R3charged.utility.Coords;
-import net.md_5.bungee.api.ChatColor;
+import io.github.R3charged.utility.Loc;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -12,13 +13,18 @@ import java.util.UUID;
 
 public class Profile {
 
+    public final static ChatColor[] ALL_MAP_COLORS =
+            {ChatColor.RED, ChatColor.DARK_RED, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.DARK_GREEN,
+            ChatColor.AQUA, ChatColor.DARK_AQUA, ChatColor.BLUE, ChatColor.DARK_BLUE, ChatColor.LIGHT_PURPLE,
+            ChatColor.DARK_PURPLE};
+
     private transient boolean override = false;
 
     private transient OnlineProfile onlineProfile;
 
     private ChatColor mapColor;
 
-    private LinkedList<Coords> ownedTiles;
+    private LinkedList<Loc> ownedTiles;
     private HashSet<UUID> friends;
 
     private LinkedList<ItemStack> wagerWinnings;
@@ -39,7 +45,12 @@ public class Profile {
     }
 
     public Profile() {
-        mapColor = ChatColor.GREEN;
+        mapColor = getRandomColor();
+    }
+
+    private ChatColor getRandomColor() {
+        int random = (int) ((ALL_MAP_COLORS.length - 1) * Math.random());
+        return ALL_MAP_COLORS[random];
     }
 
     /**
@@ -58,11 +69,21 @@ public class Profile {
         return mapColor;
     }
 
-    public void addTile(int x, int z, String world){
-
+    public boolean setMapColor(ChatColor c) {
+        for(ChatColor sample : ALL_MAP_COLORS) {
+            if(c.equals(sample)) {
+                mapColor = c;
+                return true;
+            }
+        }
+        return false;
     }
-    public void removeTile(int x, int z, String world){
 
+    public void addTile(Loc l){
+        ownedTiles.add(l);
+    }
+    public void removeTile(Loc l){
+        ownedTiles.remove(l);
     }
 
     public boolean hasFriended(UUID u) {
@@ -71,6 +92,10 @@ public class Profile {
 
     public void addFriend(UUID u) {
         friends.add(u);
+    }
+
+    public void removeFriend(UUID u) {
+        friends.remove(u);
     }
 
     public boolean isOverride(){

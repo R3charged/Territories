@@ -11,17 +11,11 @@ import org.bukkit.entity.Player;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Command implements CommandExecutor{
+public abstract class TileCommand extends TerritoryCommand {
 
     protected Loc loc;
-    protected Player sender;
 
-    private static final Pattern LOC_PTRN = Pattern.compile("(\\d+)\\s(\\d+)\\s(\\D+)");
-
-    /**
-     * Performs command action.
-     */
-    protected abstract void exeCmd();
+    private static final Pattern LOC_PTRN = Pattern.compile("(-?\\d+)\\s(-?\\d+)\\s(\\D+)");
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
@@ -48,7 +42,6 @@ public abstract class Command implements CommandExecutor{
         }
         Matcher m = LOC_PTRN.matcher(arg);
         if(m.matches()) {
-            m.find();
             loc = new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
             return true;
         }

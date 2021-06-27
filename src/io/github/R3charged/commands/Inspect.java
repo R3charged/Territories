@@ -2,11 +2,8 @@ package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 
-public class Inspect extends Command{
+public class Inspect extends TileCommand {
 
     private final String line = "----------------------------";
 

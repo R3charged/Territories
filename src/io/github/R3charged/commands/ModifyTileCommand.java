@@ -1,16 +1,14 @@
 package io.github.R3charged.commands;
 
 import io.github.R3charged.enums.Select;
-import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ModifyCommand<T extends Tile> extends Command{
+public abstract class ModifyTileCommand<T extends Tile> extends TileCommand {
 
     protected Select mode = getDefaultMode();
 
@@ -53,7 +51,7 @@ public abstract class ModifyCommand<T extends Tile> extends Command{
                     doThis();
                     break;
                 case FILL:
-                    doFill(loc.getX(), loc.getZ());
+                    doFill(loc.getX(), loc.getZ(), true);
                     break;
             }
         } catch (ClassCastException cce) {
@@ -79,16 +77,16 @@ public abstract class ModifyCommand<T extends Tile> extends Command{
         Chat.debug("doAll is unimplemented.");
     }
 
-    private void doFill(int x,int z) {
+    private void doFill(int x,int z, boolean origin) {
         T tile = (T) Tile.get(new Loc(x,z,loc.getWorld()));
-        if(tile.canModify(sender.getUniqueId()) && exeCmd(tile)) { //TODO conditions need to be change
-            doFill(x+1,z);
-            doFill(x-1,z);
-            doFill(x,z+1);
-            doFill(x,z-1);
+        if(tile != null && tile.canModify(sender.getUniqueId()) && exeCmd(tile)) { //TODO conditions need to be change
+            doFill(x+1,z, false);
+            doFill(x-1,z, false);
+            doFill(x,z+1, false);
+            doFill(x,z-1, false);
         }
-        else if (tile.canModify(sender.getUniqueId())) {
-            doEdge(tile);
+        else if (!origin && (tile == null || tile.canModify(sender.getUniqueId()))) {
+            doEdge(new Loc(x,z,loc.getWorld()));
         }
     }
 
@@ -96,7 +94,7 @@ public abstract class ModifyCommand<T extends Tile> extends Command{
         return Select.THIS;
     }
 
-    protected void doEdge(T tile) {
+    protected void doEdge(Loc l) {
         //empty
     }
 

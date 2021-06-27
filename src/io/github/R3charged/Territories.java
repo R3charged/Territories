@@ -6,6 +6,11 @@ import io.github.R3charged.collections.ProfileMap;
 import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.commands.Inspect;
 import io.github.R3charged.commands.Map;
+import io.github.R3charged.commands.modify.Claim;
+import io.github.R3charged.commands.relation.Friend;
+import io.github.R3charged.commands.relation.Unfriend;
+import io.github.R3charged.listeners.MapListener;
+import io.github.R3charged.listeners.ProtectionListener;
 import io.github.R3charged.listeners.TileListener;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Coords;
@@ -33,6 +38,7 @@ public class Territories extends JavaPlugin {
     public void onEnable(){
         this.getDataFolder().mkdir();
         TileMap.makeDirectories();
+        TileMap.deserialize();
         ProfileMap.deserialize();
         registerCommands();
         registerListeners();
@@ -47,9 +53,14 @@ public class Territories extends JavaPlugin {
     public void registerCommands(){
         this.getCommand("inspect").setExecutor(new Inspect());
         this.getCommand("map").setExecutor(new Map());
+        this.getCommand("claim").setExecutor(new Claim());
+        this.getCommand("friend").setExecutor(new Friend());
+        this.getCommand("unfriend").setExecutor(new Unfriend());
     }
     public void registerListeners(){
         getServer().getPluginManager().registerEvents(new TileListener(), this);
+        getServer().getPluginManager().registerEvents(new MapListener(), this);
+        getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
     }
 
 }

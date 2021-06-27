@@ -1,11 +1,10 @@
 package io.github.R3charged.commands.modify;
 
-import io.github.R3charged.commands.ModifyCommand;
+import io.github.R3charged.commands.ModifyTileCommand;
 import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
-import io.github.R3charged.tile.Tile;
 
-public class Unclaim extends ModifyCommand<PlayerTile> {
+public class Unclaim extends ModifyTileCommand<PlayerTile> {
     @Override
     protected boolean exeCmd(PlayerTile tile) {
         if(!tile.isFree()) {

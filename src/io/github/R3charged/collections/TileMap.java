@@ -4,6 +4,7 @@ import com.google.gson.*;
 import io.github.R3charged.Territories;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 
 import java.io.File;
@@ -39,24 +40,34 @@ public class TileMap {
         }
     }
 
+    public static void deserialize() {
+        for(Chunk c :Territories.get().getServer().getWorld("world").getLoadedChunks()) {
+            deserialize(new Loc(c));
+        }
+    }
+
     /**
      * Reads tile data from files.
      */
-    public static void deserialize() {
-
+    public static void deserialize(Loc l) {
+        Tile t = read(l);
+        if(t == null) {
+            return;
+        }
+        tileMap.put(l, t);
     }
 
-    private static void deserialize(Loc l) {
+    public static Tile read(Loc l) {
         File path = getPath(l);
 
         try {
-            FileReader reader = new FileReader(path);
+            FileReader reader = new FileReader(path); //might be making the file, which would be bad
             Tile tile = gson.fromJson(reader, Tile.class);
             tile.setLoc(l);
-            tileMap.put(l, tile);
+            return tile;
 
-        } catch(FileNotFoundException e) {
-
+        } catch(FileNotFoundException | NullPointerException e) {
+            return null;
         }
     }
 
