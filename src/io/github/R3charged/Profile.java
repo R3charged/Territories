@@ -6,10 +6,7 @@ import io.github.R3charged.utility.Loc;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 
 public class Profile {
 
@@ -23,6 +20,7 @@ public class Profile {
     private transient OnlineProfile onlineProfile;
 
     private ChatColor mapColor;
+    private Date lastLostContest;
 
     private LinkedList<Loc> ownedTiles;
     private HashSet<UUID> friends;
@@ -45,6 +43,7 @@ public class Profile {
     }
 
     public Profile() {
+        lastLostContest = new Date(0);
         mapColor = getRandomColor();
     }
 

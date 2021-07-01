@@ -17,9 +17,11 @@ public class PlayerTile extends Tile {
     private final long CLAIM_VALUE = 30000;
 
     private UUID owner;//change to more appropriate name
-    private long time, contestDecay, estimate, afkDecay; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
+    private long time, contestDecay, estimate; //time in milliseconds spent in chunk. contestDecay is decay caused by contests
     private Status status;
     private Date lastVisited;
+
+    private transient boolean inContest = false;
 
     public static PlayerTile add(Loc i) {
         HashMap<Loc, Tile> map = TileMap.get();
@@ -55,19 +57,38 @@ public class PlayerTile extends Tile {
     }
 
     private void affectTime(UUID u, long ms){ //helper method for actual affectTime
+        if(inContest) {
+            return;
+        }
         if(canContribute(u)) {
             time += ms;
             updateLastVisited();
         } else if(status.equals(Status.FREE)) { //extraneous on soft owned
             time -= ms;
-        } else if(true) { //contest
-            contestDecay += ms;
         }
         if(getValue() < 0 ) { //ownership gets overturned
             time = ms;
             contestDecay = 0;
-            afkDecay = 0;
+            setOwner(u);
         }
+    }
+
+    public void reset(UUID u) {
+        time = 10000;
+        contestDecay = 0;
+        setOwner(u);
+    }
+
+    public void setInContest(boolean inContest) {
+        this.inContest = inContest;
+    }
+
+    public boolean addContestDecay(int take) {
+        contestDecay += take * 1000; //sec to ms
+        if(getValue() <= 0) {
+            return true;
+        }
+        return false;
     }
 
     private void updateLastVisited() {
