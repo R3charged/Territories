@@ -5,6 +5,7 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.RestrictedTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
+import io.github.R3charged.utility.Config;
 import io.github.R3charged.utility.Loc;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -18,8 +19,8 @@ public class Map extends TileCommand {
     private final String TILE_CHAR = "\u2b1b";
     private final String EMPTY_CHAR = "\u2b1c";
 
-    private final int MAP_WIDTH = 29;
-    private final int MAP_HEIGHT = 13;
+    private final int MAP_WIDTH = Config.getInt("map-width"); //29;
+    private final int MAP_HEIGHT = Config.getInt("map-height"); //13;
 
     @Override
     protected void exeCmd() {

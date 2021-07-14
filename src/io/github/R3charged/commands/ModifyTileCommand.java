@@ -4,11 +4,12 @@ import io.github.R3charged.enums.Select;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ModifyTileCommand<T extends Tile> extends TileCommand {
+public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileCommand<Select> {
 
     protected Select mode = getDefaultMode();
 
@@ -41,7 +42,7 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand {
         return super.getArguements(arg.replaceFirst(MODE_PTRN,""));
     }
 
-    protected final void exeCmd(){
+    public final void exeCmd(Player sender, Loc loc, Select mode){
         try {
             switch (mode) {
                 case ALL:

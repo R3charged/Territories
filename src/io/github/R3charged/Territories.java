@@ -7,8 +7,10 @@ import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.commands.Inspect;
 import io.github.R3charged.commands.Map;
 import io.github.R3charged.commands.modify.Claim;
+import io.github.R3charged.commands.modify.Unclaim;
 import io.github.R3charged.commands.relation.Friend;
 import io.github.R3charged.commands.relation.Unfriend;
+import io.github.R3charged.contest.ContestCommand;
 import io.github.R3charged.listeners.MapListener;
 import io.github.R3charged.listeners.ProtectionListener;
 import io.github.R3charged.listeners.TileListener;
@@ -54,6 +56,8 @@ public class Territories extends JavaPlugin {
         this.getCommand("inspect").setExecutor(new Inspect());
         this.getCommand("map").setExecutor(new Map());
         this.getCommand("claim").setExecutor(new Claim());
+        this.getCommand("unclaim").setExecutor(new Unclaim());
+        this.getCommand("contest").setExecutor(new ContestCommand());
         this.getCommand("friend").setExecutor(new Friend());
         this.getCommand("unfriend").setExecutor(new Unfriend());
     }

@@ -1,5 +1,12 @@
 package io.github.R3charged.enums;
 
-public enum Select {
-    FILL, ALL, THIS
+import io.github.R3charged.interfaces.Parameter;
+
+public enum Select implements Parameter<Select> {
+    FILL, ALL, THIS;
+
+    @Override
+    public Select fromString(String arg) {
+        return valueOf(arg.toUpperCase());
+    }
 }

@@ -23,17 +23,17 @@ public abstract class TileCommand extends TerritoryCommand {
             sender.sendMessage("Only players can use this command.");
             return true;
         }
-        this.sender = (Player) sender;
-        if(!getArguements(String.join(" ", args))) {
+        Loc loc = getLoc((Player) sender, String.join(" ", args));
+        if(loc == null) {
             Chat.debug("Command tokens error");
             return false;
         }
-        exeCmd();
+        exeCmd((Player) sender, loc);
         return true;
     }
+    public abstract void exeCmd(Player sender, Loc loc);
 
-
-    protected boolean getArguements(String arg) {
+    private boolean getArguements(Player sender, String arg) {
 
         if(arg.length()==0){ //
             Chunk chunk = sender.getLocation().getChunk();
@@ -42,10 +42,10 @@ public abstract class TileCommand extends TerritoryCommand {
         }
         Matcher m = LOC_PTRN.matcher(arg);
         if(m.matches()) {
-            loc = new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
-            return true;
+            return new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
+
         }
-        return false;
+        return null;
     }
 
 }

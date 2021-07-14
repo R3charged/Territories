@@ -19,3 +19,9 @@ commands:
     unfriend:
         description: Remove a player as a friend.
         usage: /<command>
+    unclaim:
+        description: Unclaim a chunk.
+        usage: /<command>
+    contest:
+        description: Contest a chunk.
+        usage: /<command>

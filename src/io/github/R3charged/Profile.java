@@ -22,8 +22,8 @@ public class Profile {
     private ChatColor mapColor;
     private Date lastLostContest;
 
-    private LinkedList<Loc> ownedTiles;
-    private HashSet<UUID> friends;
+    private LinkedList<Loc> ownedTiles = new LinkedList<>();
+    private HashSet<UUID> friends = new HashSet<>();
 
     private LinkedList<ItemStack> wagerWinnings;
 

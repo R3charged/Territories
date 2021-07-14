@@ -7,6 +7,4 @@ import org.bukkit.entity.Player;
 public abstract class TerritoryCommand implements CommandExecutor {
 
     protected Player sender;
-
-    protected abstract void exeCmd();
 }
