@@ -4,16 +4,12 @@ import io.github.R3charged.enums.Select;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
-import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileCommand<Select> {
 
-    protected Select mode = getDefaultMode();
-
-    private final String MODE_PTRN = "^(\\D+)";
 
 
     /**
@@ -24,27 +20,9 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
      */
     protected abstract boolean exeCmd(T tile);
 
-    @Override
-    protected boolean getArguements(String arg) {
-        if(arg.length() == 0) {
-
-        }
-        else if(arg.matches(MODE_PTRN)) {
-            Matcher m = Pattern.compile(MODE_PTRN).matcher(arg);
-            m.find();
-            try {
-                mode = Select.valueOf(m.group(1).toUpperCase());
-            } catch (IllegalArgumentException e) {
-                sender.sendMessage("That is not a mode.");
-                return false;
-            }
-        }
-        return super.getArguements(arg.replaceFirst(MODE_PTRN,""));
-    }
-
-    public final void exeCmd(Player sender, Loc loc, Select mode){
+    protected final void exeCmd(){
         try {
-            switch (mode) {
+            switch (e) {
                 case ALL:
                     doAll();
                     break;
@@ -91,7 +69,7 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
         }
     }
 
-    protected Select getDefaultMode() {
+    protected Select defaultOption() {
         return Select.THIS;
     }
 

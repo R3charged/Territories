@@ -28,7 +28,7 @@ public class Claim extends ModifyTileCommand<PlayerTile> {
     }
 
     @Override
-    protected Select getDefaultMode() {
+    protected Select defaultOption() {
         return Select.FILL;
     }
 
