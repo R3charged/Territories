@@ -19,21 +19,25 @@ public abstract class TileCommand extends TerritoryCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+        return onCommand(sender, args);
+    }
+
+    public boolean onCommand(CommandSender sender, String... args) {
         if(!(sender instanceof Player)) { //TODO maybe change later
             sender.sendMessage("Only players can use this command.");
             return true;
         }
-        Loc loc = getLoc((Player) sender, String.join(" ", args));
-        if(loc == null) {
+        this.sender = (Player) sender;
+        if(!getArguements(String.join(" ", args))) {
             Chat.debug("Command tokens error");
             return false;
         }
-        exeCmd((Player) sender, loc);
+        exeCmd();
         return true;
     }
-    public abstract void exeCmd(Player sender, Loc loc);
 
-    private boolean getArguements(Player sender, String arg) {
+
+    protected boolean getArguements(String arg) {
 
         if(arg.length()==0){ //
             Chunk chunk = sender.getLocation().getChunk();
@@ -42,10 +46,10 @@ public abstract class TileCommand extends TerritoryCommand {
         }
         Matcher m = LOC_PTRN.matcher(arg);
         if(m.matches()) {
-            return new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
-
+            loc = new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
+            return true;
         }
-        return null;
+        return false;
     }
 
 }

@@ -1,10 +1,12 @@
 package io.github.R3charged.commands.modify;
 
+import io.github.R3charged.commands.Map;
 import io.github.R3charged.commands.ModifyTileCommand;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.Bukkit;
 
 public class Claim extends ModifyTileCommand<PlayerTile> {
 
@@ -12,6 +14,7 @@ public class Claim extends ModifyTileCommand<PlayerTile> {
     protected boolean exeCmd(PlayerTile tile) {
         if(tile.canClaim(sender.getUniqueId())) {
             tile.setStatus(Status.CLAIM);
+            new Map().onCommand(sender, ""); //TODO
             return true;
         }
         return false;

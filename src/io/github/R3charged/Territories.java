@@ -15,6 +15,7 @@ import io.github.R3charged.listeners.MapListener;
 import io.github.R3charged.listeners.ProtectionListener;
 import io.github.R3charged.listeners.TileListener;
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Config;
 import io.github.R3charged.utility.Coords;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +40,7 @@ public class Territories extends JavaPlugin {
     @Override
     public void onEnable(){
         this.getDataFolder().mkdir();
+        Config.initialize();
         TileMap.makeDirectories();
         TileMap.deserialize();
         ProfileMap.deserialize();
