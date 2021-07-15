@@ -20,7 +20,7 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
      */
     protected abstract boolean exeCmd(T tile);
 
-    protected final void exeCmd(){
+    protected void exeCmd(){
         try {
             switch (e) {
                 case ALL:

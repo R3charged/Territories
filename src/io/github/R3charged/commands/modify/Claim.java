@@ -8,13 +8,13 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
 
-public class Claim extends ModifyTileCommand<PlayerTile> {
+public class Claim extends MapWrapper {
 
     @Override
     protected boolean exeCmd(PlayerTile tile) {
         if(tile.canClaim(sender.getUniqueId())) {
             tile.setStatus(Status.CLAIM);
-            new Map().onCommand(sender, ""); //TODO
+            showMap();
             return true;
         }
         return false;
