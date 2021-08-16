@@ -8,5 +8,5 @@ public abstract class TerritoryCommand implements CommandExecutor {
 
     protected Player sender;
 
-    protected abstract void exeCmd();
+    protected abstract boolean exeCmd();
 }

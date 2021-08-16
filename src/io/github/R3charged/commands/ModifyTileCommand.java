@@ -20,33 +20,33 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
      */
     protected abstract boolean exeCmd(T tile);
 
-    protected void exeCmd(){
+    protected boolean exeCmd(){
         try {
             switch (e) {
                 case ALL:
-                    doAll();
-                    break;
+                    return doAll();
                 case THIS:
-                    doThis();
-                    break;
+                    return doThis();
                 case FILL:
-                    doFill(loc.getX(), loc.getZ(), true);
-                    break;
+                    return doFill(loc.getX(), loc.getZ(), true);
             }
         } catch (ClassCastException cce) {
             Chat.error(sender ,"This command cannot be used on this chunk.");
+            return false;
         }
+        return true;
     }
 
-    private void doThis() {
+    private boolean doThis() {
         T t = (T) Tile.get(loc);
 
         if(t.canModify(sender.getUniqueId())) {
-            exeCmd(t);
+            return exeCmd(t);
         }
+        return false;
     }
 
-    private void doAll() {
+    private boolean doAll() {
         /*
         for(Tile tile: TileManager.getTilesOf(sender.getUniqueId())) {
             exeCmd(tile);
@@ -54,9 +54,10 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
 
          */
         Chat.debug("doAll is unimplemented.");
+        return false;
     }
 
-    private void doFill(int x,int z, boolean origin) {
+    private boolean doFill(int x,int z, boolean origin) {
         T tile = (T) Tile.get(new Loc(x,z,loc.getWorld()));
         if(tile != null && tile.canModify(sender.getUniqueId()) && exeCmd(tile)) { //TODO conditions need to be change
             doFill(x+1,z, false);
@@ -67,6 +68,10 @@ public abstract class ModifyTileCommand<T extends Tile> extends ComplexTileComma
         else if (!origin && (tile == null || tile.canModify(sender.getUniqueId()))) {
             doEdge(new Loc(x,z,loc.getWorld()));
         }
+        else if(origin) {
+            return false;
+        }
+        return true;
     }
 
     protected Select defaultOption() {

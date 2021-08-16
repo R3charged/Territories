@@ -2,10 +2,13 @@ package io.github.R3charged.listeners;
 
 import io.github.R3charged.Profile;
 import io.github.R3charged.collections.TileMap;
+import io.github.R3charged.commands.modify.Claim;
+import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +17,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class TileListener implements Listener {
 
+    private final Claim claim;
+    {
+        claim = new Claim();
+        claim.setMap(false);
+    }
     /**
      * When player moves to a different chunk, time in old chunk is stored.
      * @param e
@@ -25,7 +33,10 @@ public class TileListener implements Listener {
         {
             PlayerTile ptile = PlayerTile.add(new Loc(e.getFrom().getChunk()));
             ptile.affectTime(e.getPlayer().getUniqueId());
-
+            if(ptile.getStatus().equals(Status.PAD)) {
+                Chunk from = e.getFrom().getChunk();
+                claim.onCommand(e.getPlayer(), from.getX() + " " + from.getZ(), from.getWorld().getName());
+            }
             Chat.debug("Left " + ptile.getValue());
             TileMap.serialize();
             /*

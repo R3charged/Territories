@@ -10,7 +10,6 @@ public class Unclaim extends MapWrapper {
     protected boolean exeCmd(PlayerTile tile) {
         if(!tile.isFree()) {
             tile.setStatus(Status.FREE);
-            showMap();
             return true;
         }
         return false;

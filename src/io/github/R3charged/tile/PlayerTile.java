@@ -139,6 +139,9 @@ public class PlayerTile extends Tile {
         if(owner == null) {
             setOwner(u);
         }
+        if(status.equals(Status.FREE)) {
+            return true;
+        }
         return u.equals(owner) || Profile.areFriends(owner, u) || Profile.get(u).isOverride();
     }
 

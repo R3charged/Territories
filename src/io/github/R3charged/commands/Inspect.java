@@ -8,7 +8,7 @@ public class Inspect extends TileCommand {
     private final String line = "----------------------------";
 
     @Override
-    protected void exeCmd() {
+    protected boolean exeCmd() {
 
         Tile tile = Tile.get(loc);
         if(tile instanceof PlayerTile){
@@ -16,8 +16,9 @@ public class Inspect extends TileCommand {
             sender.sendMessage(loc.getX() + " " + loc.getZ() + " " + loc.getWorld() + "\n" +
                     "V: " + ptile.getValue());
             //sender.spigot().sendMessage(message(ptile));
+            return true;
         }
-
+        return false;
 
 
     }

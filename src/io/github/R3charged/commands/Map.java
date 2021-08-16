@@ -23,7 +23,7 @@ public class Map extends TileCommand {
     private final int MAP_HEIGHT = Config.getInt("map-height"); //13;
 
     @Override
-    protected void exeCmd() {
+    protected boolean exeCmd() {
         TextComponent[][] arr = getMapArray(loc.getX() - (MAP_WIDTH/2),loc.getZ() - (MAP_HEIGHT/2));
         TextComponent message = new TextComponent(ChatColor.UNDERLINE+"Map                                                   ");
         for(int j = 0; j < MAP_HEIGHT; j++) {
@@ -33,6 +33,7 @@ public class Map extends TileCommand {
             }
         }
         sender.spigot().sendMessage(message);
+        return true;
     }
 
     /**

@@ -1,12 +1,13 @@
 package io.github.R3charged.collections;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.R3charged.Profile;
 import io.github.R3charged.Territories;
+import io.github.R3charged.utility.Coords;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -24,7 +25,7 @@ public class ProfileMap {
         }
     }
 
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().enableComplexMapKeySerialization().create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private static HashMap<UUID, Profile> profileMap = new HashMap<UUID, Profile>();
 
@@ -39,7 +40,7 @@ public class ProfileMap {
             gson.fromJson( reader, new TypeToken<HashMap<UUID, Profile>>(){}.getType() );
             reader.close();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
 
     }
@@ -54,4 +55,7 @@ public class ProfileMap {
     }
 
 
+
 }
+
+

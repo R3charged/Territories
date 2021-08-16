@@ -6,16 +6,17 @@ import org.bukkit.Bukkit;
 
 public class Unfriend extends RelCommand{
 
-    protected void exeCmd() { //TODO
+    protected boolean exeCmd() { //TODO
         String name = Bukkit.getOfflinePlayer(friend).getName();
         if(!Profile.areFriends(sender.getUniqueId(), friend)) {
             Chat.error(sender, "You are not friends with " + name + ".");
-            return;
+            return false;
         } else {
             Chat.success(sender, "You have unfriended " + name + ".");
             notifyFriend(friend, sender.getName() + " has unfriended you.");
         }
         Profile.get(sender.getUniqueId()).removeFriend(friend);
         Profile.get(friend).removeFriend(sender.getUniqueId());
+        return true;
     }
 }
