@@ -2,8 +2,14 @@ package io.github.R3charged;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.CustomArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.wrappers.Location2D;
 import io.github.R3charged.collections.ProfileMap;
 import io.github.R3charged.collections.TileMap;
+import io.github.R3charged.commands.CommandsManager;
 import io.github.R3charged.commands.Inspect;
 import io.github.R3charged.commands.Map;
 import io.github.R3charged.commands.modify.Claim;
@@ -15,8 +21,11 @@ import io.github.R3charged.listeners.MapListener;
 import io.github.R3charged.listeners.ProtectionListener;
 import io.github.R3charged.listeners.TileListener;
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Config;
 import io.github.R3charged.utility.Coords;
+import io.github.R3charged.utility.Loc;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,7 +53,7 @@ public class Territories extends JavaPlugin {
         TileMap.makeDirectories();
         TileMap.deserialize();
         ProfileMap.deserialize();
-        registerCommands();
+        CommandsManager.register();
         registerListeners();
     }
     @Override
@@ -54,19 +63,12 @@ public class Territories extends JavaPlugin {
         ProfileMap.serialize();
     }
 
-    public void registerCommands(){
-        this.getCommand("inspect").setExecutor(new Inspect());
-        this.getCommand("map").setExecutor(new Map());
-        this.getCommand("claim").setExecutor(new Claim());
-        this.getCommand("unclaim").setExecutor(new Unclaim());
-        this.getCommand("contest").setExecutor(new ContestCommand());
-        this.getCommand("friend").setExecutor(new Friend());
-        this.getCommand("unfriend").setExecutor(new Unfriend());
-    }
     public void registerListeners(){
         getServer().getPluginManager().registerEvents(new TileListener(), this);
         getServer().getPluginManager().registerEvents(new MapListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
     }
+
+
 
 }

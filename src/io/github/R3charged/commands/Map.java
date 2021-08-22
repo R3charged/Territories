@@ -22,6 +22,10 @@ public class Map extends TileCommand {
     private final int MAP_WIDTH = Config.getInt("map-width"); //29;
     private final int MAP_HEIGHT = Config.getInt("map-height"); //13;
 
+    public Map(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd() {
         TextComponent[][] arr = getMapArray(loc.getX() - (MAP_WIDTH/2),loc.getZ() - (MAP_HEIGHT/2));

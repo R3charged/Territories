@@ -7,6 +7,11 @@ import io.github.R3charged.tile.PlayerTile;
 public abstract class MapWrapper extends ModifyTileCommand<PlayerTile> {
 
     private boolean mapBool = true;
+
+    public MapWrapper(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd() {
         //update time before
@@ -23,7 +28,7 @@ public abstract class MapWrapper extends ModifyTileCommand<PlayerTile> {
 
     private void showMap() {
         if(mapBool) {
-            new Map().onCommand(sender, ""); //TODO
+            //new Map("").execute(sender, ""); //TODO
         }
     }
 }

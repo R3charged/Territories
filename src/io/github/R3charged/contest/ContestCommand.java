@@ -5,6 +5,10 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 
 public class ContestCommand extends TileCommand {
+    public ContestCommand(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd() {
         if(Tile.get(loc) instanceof PlayerTile) {

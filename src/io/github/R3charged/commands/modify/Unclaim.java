@@ -6,6 +6,10 @@ import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
 
 public class Unclaim extends MapWrapper {
+    public Unclaim(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd(PlayerTile tile) {
         if(!tile.isFree()) {

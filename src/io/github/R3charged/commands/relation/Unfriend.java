@@ -6,6 +6,15 @@ import org.bukkit.Bukkit;
 
 public class Unfriend extends RelCommand{
 
+    public Unfriend(String commandName) {
+        super(commandName);
+    }
+
+    @Override
+    protected void castArgs(Object[] args) {
+
+    }
+
     protected boolean exeCmd() { //TODO
         String name = Bukkit.getOfflinePlayer(friend).getName();
         if(!Profile.areFriends(sender.getUniqueId(), friend)) {

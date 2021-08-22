@@ -15,6 +15,11 @@ public abstract class RelCommand extends TerritoryCommand {
 
     protected UUID friend;
 
+    public RelCommand(String commandName) {
+        super(commandName);
+    }
+
+    /*
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         try {
@@ -25,7 +30,7 @@ public abstract class RelCommand extends TerritoryCommand {
             Chat.error(commandSender, "That is not a valid player.");
         }
         return true;
-    }
+    }*/
 
     protected void notifyFriend(UUID u, String msg) {
         try {

@@ -11,6 +11,10 @@ import org.bukkit.Bukkit;
 
 public class Claim extends MapWrapper {
 
+    public Claim(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd(PlayerTile tile) {
         if(tile.canClaim(sender.getUniqueId())) {

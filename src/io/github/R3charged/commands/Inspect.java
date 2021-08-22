@@ -7,6 +7,10 @@ public class Inspect extends TileCommand {
 
     private final String line = "----------------------------";
 
+    public Inspect(String commandName) {
+        super(commandName);
+    }
+
     @Override
     protected boolean exeCmd() {
 

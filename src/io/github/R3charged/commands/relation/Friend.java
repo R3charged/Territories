@@ -6,6 +6,15 @@ import org.bukkit.Bukkit;
 
 public class Friend extends RelCommand {
 
+    public Friend(String commandName) {
+        super(commandName);
+    }
+
+    @Override
+    protected void castArgs(Object[] args) {
+
+    }
+
     protected boolean exeCmd() {
         String name = Bukkit.getOfflinePlayer(friend).getName();
         if(sender.getUniqueId().equals(friend)) {

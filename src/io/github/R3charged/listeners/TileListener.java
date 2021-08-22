@@ -19,7 +19,7 @@ public class TileListener implements Listener {
 
     private final Claim claim;
     {
-        claim = new Claim();
+        claim = new Claim("asd");
         claim.setMap(false);
     }
     /**
@@ -35,7 +35,7 @@ public class TileListener implements Listener {
             ptile.affectTime(e.getPlayer().getUniqueId());
             if(ptile.getStatus().equals(Status.PAD)) {
                 Chunk from = e.getFrom().getChunk();
-                claim.onCommand(e.getPlayer(), from.getX() + " " + from.getZ(), from.getWorld().getName());
+                //claim.onCommand(e.getPlayer(), from.getX() + " " + from.getZ(), from.getWorld().getName());
             }
             Chat.debug("Left " + ptile.getValue());
             TileMap.serialize();

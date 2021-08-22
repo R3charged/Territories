@@ -1,13 +1,23 @@
 package io.github.R3charged.commands;
 
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.CustomArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.wrappers.Location2D;
+import io.github.R3charged.LocArgument;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,41 +25,40 @@ public abstract class TileCommand extends TerritoryCommand {
 
     protected Loc loc;
 
-    private static final Pattern LOC_PTRN = Pattern.compile("(-?\\d+)\\s(-?\\d+)\\s(\\D+)");
+    private Argument locArg = new LocArgument("Chunk");
+
+    private Argument worldArg = new StringArgument("World").replaceSuggestions(sender -> {
+        // List of world names on the server
+        return Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
+    });
+
+    public TileCommand(String commandName) {
+        super(commandName);
+        withArguments(locArg, worldArg);
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        return onCommand(sender, args);
+    protected void castArgs(Object[] args) {
+        loc = getLoc(args);
     }
 
-    public boolean onCommand(CommandSender sender, String... args) {
-        if(!(sender instanceof Player)) { //TODO maybe change later
-            sender.sendMessage("Only players can use this command.");
-            return true;
-        }
-        this.sender = (Player) sender;
-        if(!getArguements(String.join(" ", args))) {
-            Chat.debug("Command tokens error");
-            return false;
-        }
-        exeCmd();
-        return true;
+    private Loc getLoc(Object[] args) {
+        Location2D location2D = (Location2D) args[of(locArg)];
+        Chat.debug("location2D: " + location2D.getX() + " " + location2D.getZ());
+        return new Loc(location2D.getChunk().getX(), location2D.getChunk().getZ(), (String)args[of(worldArg)]);
     }
 
 
-    protected boolean getArguements(String arg) {
+    private static Argument worldArgument(String nodeName) {
 
-        if(arg.length()==0){ //
-            Chunk chunk = sender.getLocation().getChunk();
-            loc = new Loc(chunk.getX(),chunk.getZ(),chunk.getWorld().getName());
-            return true;
-        }
-        Matcher m = LOC_PTRN.matcher(arg);
-        if(m.matches()) {
-            loc = new Loc(Integer.valueOf(m.group(1)), Integer.valueOf(m.group(2)), m.group(3));
-            return true;
-        }
-        return false;
+        // Construct our CustomArgument that takes in a String input and returns a World object
+        return new CustomArgument<String>(nodeName, info -> {
+            // Parse the world from our input
+            return "sd";
+        }).replaceSuggestions(sender -> {
+            // List of world names on the server
+            return Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
+        });
     }
 
 }
