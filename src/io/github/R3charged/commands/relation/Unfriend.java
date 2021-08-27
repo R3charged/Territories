@@ -2,30 +2,26 @@ package io.github.R3charged.commands.relation;
 
 import io.github.R3charged.Profile;
 import io.github.R3charged.utility.Chat;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-public class Unfriend extends RelCommand{
+import java.util.UUID;
 
-    public Unfriend(String commandName) {
-        super(commandName);
-    }
+public class Unfriend {
 
-    @Override
-    protected void castArgs(Object[] args) {
 
-    }
-
-    protected boolean exeCmd() { //TODO
-        String name = Bukkit.getOfflinePlayer(friend).getName();
-        if(!Profile.areFriends(sender.getUniqueId(), friend)) {
+    protected boolean exeCmd(Player sender, Player friend) { //TODO
+        String name = friend.getName();
+        if(!Profile.areFriends(sender.getUniqueId(), friend.getUniqueId())) {
             Chat.error(sender, "You are not friends with " + name + ".");
             return false;
         } else {
             Chat.success(sender, "You have unfriended " + name + ".");
-            notifyFriend(friend, sender.getName() + " has unfriended you.");
+            friend.sendMessage(sender.getName() + " has unfriended you."); //TODO
         }
-        Profile.get(sender.getUniqueId()).removeFriend(friend);
-        Profile.get(friend).removeFriend(sender.getUniqueId());
+        Profile.get(sender.getUniqueId()).removeFriend(friend.getUniqueId());
+        Profile.get(friend.getUniqueId()).removeFriend(sender.getUniqueId());
         return true;
     }
 }

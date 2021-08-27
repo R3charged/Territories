@@ -15,6 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -34,18 +35,14 @@ public abstract class TileCommand extends TerritoryCommand {
 
     public TileCommand(String commandName) {
         super(commandName);
-        withArguments(locArg, worldArg);
+        addDefault("X", sender.getLocation().getChunk().getX());
+        addDefault("Z", sender.getLocation().getChunk().getZ());
+        addDefault("World", sender.getLocation().getChunk().getWorld().getName());
     }
 
     @Override
-    protected void castArgs(Object[] args) {
-        loc = getLoc(args);
-    }
-
-    private Loc getLoc(Object[] args) {
-        Location2D location2D = (Location2D) args[of(locArg)];
-        Chat.debug("location2D: " + location2D.getX() + " " + location2D.getZ());
-        return new Loc(location2D.getChunk().getX(), location2D.getChunk().getZ(), (String)args[of(worldArg)]);
+    protected void castArgs(HashMap<String, Object> map) {
+        loc = new Loc((int)map.get("X"), (int)map.get("Z"), (String)map.get("World"));
     }
 
 

@@ -21,6 +21,11 @@ public class RestrictedTile extends Tile {
     }
 
     @Override
+    public void setColor(ChatColor color) {
+        this.color = color;
+    }
+
+    @Override
     public boolean canContribute(UUID u) {
         return openBuilding;
     }

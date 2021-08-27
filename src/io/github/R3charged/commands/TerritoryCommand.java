@@ -1,12 +1,19 @@
 package io.github.R3charged.commands;
 
+import dev.jorel.commandapi.Brigadier;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public abstract class TerritoryCommand extends CommandAPICommand{
+
+    private HashMap<String, Object> defaultValues = new HashMap<>();
 
     protected Player sender;
 
@@ -19,7 +26,7 @@ public abstract class TerritoryCommand extends CommandAPICommand{
             }
             this.sender = (Player) sender;
 
-            castArgs(args);
+            castArgs(getMap(args));
             exeCmd();
         });
 
@@ -40,10 +47,21 @@ public abstract class TerritoryCommand extends CommandAPICommand{
         return this;
     }
 
-    protected int of(Argument arg) {
-        return getArguments().indexOf(arg);
+    protected void addDefault(String nodeName, Object obj) {
+        defaultValues.put(nodeName,obj);
     }
 
-    protected abstract void castArgs(Object[] args);
+    protected HashMap<String, Object> getMap(Object[] args) {
+        HashMap<String,Object> map = (HashMap<String, Object>) defaultValues.clone();
+        for(int i = 0; i<getArguments().size(); i++) {
+            map.put(getArguments().get(i).getNodeName(), args[i]);
+        }
+        return map;
+    }
+
+    public Object duplicate() throws CloneNotSupportedException {
+        return clone();
+    }
+    protected abstract void castArgs(HashMap<String, Object> map);
     protected abstract boolean exeCmd();
 }

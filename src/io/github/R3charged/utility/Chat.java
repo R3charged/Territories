@@ -12,6 +12,13 @@ public class Chat {
     public static void success(CommandSender sender, String msg) {
         sender.sendMessage(SUCCESS + msg);
     }
+    public static void greatSuccess(CommandSender sender, String msg) {
+        sender.sendMessage(SUCCESS + msg);
+    }
+
+    public static void warning(CommandSender sender, String msg) {
+        sender.sendMessage(ChatColor.GRAY + msg);
+    }
     public static void error(CommandSender sender, String msg) {
         sender.sendMessage(error + msg);
     }

@@ -1,5 +1,6 @@
 package io.github.R3charged.commands;
 
+import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.tile.Tile;
@@ -7,6 +8,7 @@ import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,32 +16,17 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
 
     private Select select;
 
-    CustomArgument<Select> selectArg = new CustomArgument<Select>("Select", info -> {
-        String s = info.input();
-        Select select = defaultOption();
-        try {
-            select = Select.valueOf(s.toUpperCase());
-        } catch(Exception e) {
-            Chat.error(sender, "Unknown select option.");
-        }
-        return select;
-    });
-    {
-        selectArg.replaceSuggestions(sender -> {
-            return Arrays.asList(Select.values()).stream().toArray(String[]::new);
-        });
-    }
+
 
     public ModifyTileCommand(String commandName) {
         super(commandName);
-        prepend(selectArg);
-
+        addDefault("Select",defaultOption());
     }
 
     @Override
-    protected void castArgs(Object[] args) {
-        super.castArgs(args);
-        select = (Select) args[of(selectArg)];
+    protected void castArgs(HashMap<String, Object> map) {
+        super.castArgs(map);
+        select = (Select) map.get("Select");
     }
 
     /**
@@ -110,6 +97,12 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
 
     protected void doEdge(Loc l) {
         //empty
+    }
+
+    @Override
+    public ModifyTileCommand withArguments(Argument... args) {
+        super.withArguments(args);
+        return this;
     }
 
 }

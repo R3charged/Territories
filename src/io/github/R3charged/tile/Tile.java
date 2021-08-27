@@ -30,6 +30,8 @@ public abstract class Tile {
 
     public abstract ChatColor getColor();
 
+    public abstract void setColor(ChatColor color);
+
     public Loc getLoc() {
         return location;
     }

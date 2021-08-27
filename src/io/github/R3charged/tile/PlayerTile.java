@@ -167,6 +167,11 @@ public class PlayerTile extends Tile {
     }
 
     @Override
+    public void setColor(ChatColor color) {
+        Profile.get(owner).setMapColor(color);
+    }
+
+    @Override
     public String getTitle(){
         if(super.getTitle() == null) {
             return getOwnerName()+"'s Territory";

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="CheckStyle-IDEA-Module">
+    <option name="configuration">
+      <map />
+    </option>
+  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -28,10 +33,12 @@
       <library>
         <CLASSES>
           <root url="jar://D:/Users/ardeu/Desktop/Local Spigot/spigot.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/spigot-1.17.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
           <root url="jar://D:/Users/ardeu/Desktop/Local Spigot/spigot.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/spigot-1.17.1.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
