@@ -7,6 +7,7 @@ import dev.jorel.commandapi.executors.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,14 +54,31 @@ public abstract class TerritoryCommand extends CommandAPICommand{
 
     protected HashMap<String, Object> getMap(Object[] args) {
         HashMap<String,Object> map = (HashMap<String, Object>) defaultValues.clone();
-        for(int i = 0; i<getArguments().size(); i++) {
-            map.put(getArguments().get(i).getNodeName(), args[i]);
+        try {
+            for (int i = 0; i < getArguments().size(); i++) {
+                map.put(getArguments().get(i).getNodeName(), args[i]);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            return map;
         }
         return map;
     }
 
-    public Object duplicate() throws CloneNotSupportedException {
-        return clone();
+    public Object duplicate() {
+        try {
+            TerritoryCommand cmd = getClass().getDeclaredConstructor(String.class).newInstance(getName());
+            cmd.setArguments(getArguments());
+            return cmd;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     protected abstract void castArgs(HashMap<String, Object> map);
     protected abstract boolean exeCmd();

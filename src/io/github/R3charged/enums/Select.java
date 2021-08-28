@@ -4,4 +4,6 @@ import io.github.R3charged.interfaces.Parameter;
 
 public enum Select {
     FILL, ALL, THIS
+
+
 }

@@ -35,14 +35,16 @@ public abstract class TileCommand extends TerritoryCommand {
 
     public TileCommand(String commandName) {
         super(commandName);
-        addDefault("X", sender.getLocation().getChunk().getX());
-        addDefault("Z", sender.getLocation().getChunk().getZ());
-        addDefault("World", sender.getLocation().getChunk().getWorld().getName());
     }
 
     @Override
     protected void castArgs(HashMap<String, Object> map) {
-        loc = new Loc((int)map.get("X"), (int)map.get("Z"), (String)map.get("World"));
+        try {
+            loc = new Loc((int) map.get("X"), (int) map.get("Z"), (String) map.get("World"));
+        } catch (NullPointerException e) {
+            Chunk c = sender.getLocation().getChunk();
+            loc = new Loc(c.getX(), c.getZ(), c.getWorld().getName());
+        }
     }
 
 

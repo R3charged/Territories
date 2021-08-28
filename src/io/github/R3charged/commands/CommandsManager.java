@@ -30,12 +30,14 @@ public class CommandsManager {
         }
         return null;
     }).replaceSuggestions(sender -> {
-        return Arrays.asList(Select.values()).stream().toArray(String[]::new);
-    });;
+        return getValues(Select.values());
+    });
 
 
     public static void register() {
 
+        new Map("map").withArguments(x,z,world).register();
+        new Map("map").register();
         //**************************************************
         //TILE COMMANDS
         //**************************************************
@@ -48,8 +50,7 @@ public class CommandsManager {
         CommandAPICommand master = new Inspect("tile");
 
 
-        new Map("map").withArguments(x,z,world).register();
-        new Map("map").register();
+
 
         new ContestCommand("challenge").register();
 
@@ -59,7 +60,7 @@ public class CommandsManager {
         new Claim("claim").withArguments(select,x,z,world).register();
         new Claim("claim").withArguments(x,z,world).register();
         new Claim("claim").withArguments(select).register();
-        new Claim("claim").register();
+        //new Claim("claim").register();
 
         of((ModifyTileCommand) new Transfer("transfer")
                 .withArguments(new PlayerArgument("Recipient")));
@@ -97,15 +98,21 @@ public class CommandsManager {
 
     private static List<CommandAPICommand> of(ModifyTileCommand cmd) {
         ArrayList<CommandAPICommand> list = new ArrayList<>();
-        try {
+
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select,x,z,world));
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(x,z,world));
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select));
             list.add(cmd);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+
         return list;
+    }
+
+    public static <O> String[] getValues(O[] o) {
+        String[] arr = new String[o.length];
+        for(int i = 0; i < o.length; i++) {
+            arr[i] = o[i].toString();
+        }
+        return arr;
     }
 
     private static Argument worldArgument(String nodeName) {
