@@ -60,7 +60,9 @@ public class CommandsManager {
         new Claim("claim").withArguments(select,x,z,world).register();
         new Claim("claim").withArguments(x,z,world).register();
         new Claim("claim").withArguments(select).register();
-        //new Claim("claim").register();
+        new Claim("claim").register();
+
+        cmds.addAll(of(new Claim("claim")));
 
         of((ModifyTileCommand) new Transfer("transfer")
                 .withArguments(new PlayerArgument("Recipient")));
@@ -97,12 +99,27 @@ public class CommandsManager {
     }
 
     private static List<CommandAPICommand> of(ModifyTileCommand cmd) {
+
+        System.out.println(cmd.getName());
+        for( Argument arg: cmd.getArguments()) {
+            System.out.println(arg.getNodeName());
+        }
+        System.out.println();
+
         ArrayList<CommandAPICommand> list = new ArrayList<>();
 
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select,x,z,world));
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(x,z,world));
             list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select));
             list.add(cmd);
+
+            for(CommandAPICommand t : list) {
+                System.out.println(t.getName());
+                for( Argument arg: t.getArguments()) {
+                    System.out.println(arg.getNodeName());
+                }
+                System.out.println();
+            }
 
         return list;
     }

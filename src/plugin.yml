@@ -2,26 +2,3 @@ name: Territories
 version: 1.5
 author: R3charged
 main: io.github.R3charged.Territories
-
-commands:
-    inspect:
-        description: Inspect the properties of a chunk.
-        usage: /<command>
-    map:
-        description: Shows a map of surrounding chunks.
-        usage: /<command>
-    claim:
-        description: Claim a chunk for yourself.
-        usage: /<command>
-    friend:
-        description: Add a player as a friend, who can build and contribute to your chunks.
-        usage: /<command>
-    unfriend:
-        description: Remove a player as a friend.
-        usage: /<command>
-    unclaim:
-        description: Unclaim a chunk.
-        usage: /<command>
-    contest:
-        description: Contest a chunk.
-        usage: /<command>
