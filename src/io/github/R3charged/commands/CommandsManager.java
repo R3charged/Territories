@@ -124,7 +124,7 @@ public class CommandsManager {
         return list;
     }
 
-    public static <O> String[] getValues(O[] o) {
+    private static <O> String[] getValues(O[] o) {
         String[] arr = new String[o.length];
         for(int i = 0; i < o.length; i++) {
             arr[i] = o[i].toString();

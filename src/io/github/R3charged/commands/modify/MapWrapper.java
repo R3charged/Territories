@@ -28,7 +28,7 @@ public abstract class MapWrapper extends ModifyTileCommand<PlayerTile> {
 
     private void showMap() {
         if(mapBool) {
-            //new Map("").execute(sender, ""); //TODO
+            //TODO
         }
     }
 }

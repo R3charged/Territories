@@ -7,6 +7,10 @@ import dev.jorel.commandapi.executors.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,20 +70,25 @@ public abstract class TerritoryCommand extends CommandAPICommand{
 
     public Object duplicate() {
         try {
-            TerritoryCommand cmd = getClass().getDeclaredConstructor(String.class).newInstance(getName());
-            cmd.setArguments(getArguments());
-            return cmd;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+            ByteArrayOutputStream outByte = new ByteArrayOutputStream();
+            ObjectOutputStream outObj = new ObjectOutputStream(outByte);
+            ByteArrayInputStream inByte;
+            ObjectInputStream inObject;
+            outObj.writeObject(this);
+            outObj.close();
+            byte[] buffer = outByte.toByteArray();
+            inByte = new ByteArrayInputStream(buffer);
+            inObject = new ObjectInputStream(inByte);
+            @SuppressWarnings("unchecked")
+            Object deepcopy =  inObject.readObject();
+            inObject.close();
+            return (TerritoryCommand) deepcopy;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
     protected abstract void castArgs(HashMap<String, Object> map);
     protected abstract boolean exeCmd();
+
 }

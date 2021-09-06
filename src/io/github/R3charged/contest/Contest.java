@@ -25,7 +25,7 @@ public class Contest {
     private int taskID;
     private Runnable runnable = () -> {
         sendActionBar();
-        if(isPresent(player) && !isPresent(owner)) { //contest deduct
+        if(isPresent(player)) { //contest deduct
             if(tile.addContestDecay(takeRate)) {
                 tile.reset(player.getUniqueId());
                 end();

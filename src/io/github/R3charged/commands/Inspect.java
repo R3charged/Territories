@@ -2,6 +2,9 @@ package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Inspect extends TileCommand {
 
@@ -25,6 +28,21 @@ public class Inspect extends TileCommand {
         return false;
 
 
+    }
+
+    private TextComponent button(String buttonName, String command){
+        TextComponent btn = new TextComponent(ChatColor.BOLD + buttonName);
+        btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                "/" + command +" "+loc.getX()+" "+loc.getZ()+" "+loc.getWorld()));
+        return btn;
+    }
+
+    private TextComponent buttonLine(String title, TextComponent... button) {
+        TextComponent line = new TextComponent("\n" + title + ":");
+        for(TextComponent btn: button) {
+            line.addExtra(" " + btn);
+        }
+        return line;
     }
 
     /*
@@ -57,19 +75,7 @@ public class Inspect extends TileCommand {
         return line;
     }
 
-    private TextComponent button(String label,String command){
-        int x = tile.getX();
-        int z = tile.getZ();
-        String world = tile.getWorld();
-        TextComponent line = new TextComponent("\n"+label+": ");
-        TextComponent txt = new TextComponent(ChatColor.BOLD+"[THIS]");
-        txt.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/"+command+" THIS "+x+" "+z+" "+world));
-        line.addExtra(txt);
-        txt = new TextComponent(ChatColor.BOLD+"[AREA]");
-        txt.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/"+command+" AREA "+x+" "+z+" "+world));
-        line.addExtra(txt);
-        return line;
-    }
+
 
     private TextComponent button(String... args) {
         TextComponent line = new TextComponent(args[0]+": ");
