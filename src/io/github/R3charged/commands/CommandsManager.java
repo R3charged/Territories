@@ -5,8 +5,6 @@ import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import io.github.R3charged.commands.modify.Claim;
 import io.github.R3charged.commands.modify.Settings;
-import io.github.R3charged.commands.modify.Transfer;
-import io.github.R3charged.contest.ContestCommand;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
@@ -14,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandsManager {

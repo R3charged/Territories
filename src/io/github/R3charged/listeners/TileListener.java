@@ -17,11 +17,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class TileListener implements Listener {
 
-    private final Claim claim;
-    {
-        claim = new Claim("asd");
-        claim.setMap(false);
-    }
     /**
      * When player moves to a different chunk, time in old chunk is stored.
      * @param e
