@@ -8,25 +8,24 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class Claim extends MapWrapper {
 
-    public Claim(String commandName) {
-        super(commandName);
+    public void execute(Player sender, Loc loc, Select select) {
+        executor = tile -> {
+            if(tile.canClaim(sender.getUniqueId())) {
+                Chat.debug("ss");
+                tile.setStatus(Status.CLAIM);
+                return true;
+            }
+            return false;
+        };
+        super.execute(sender, loc, select);
     }
 
     @Override
-    protected boolean exeCmd(PlayerTile tile) {
-        if(tile.canClaim(sender.getUniqueId())) {
-            Chat.debug("ss");
-            tile.setStatus(Status.CLAIM);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    protected void doEdge(Loc l) {
+    protected void doEdge(Player sender, Loc l) {
         PlayerTile tile = PlayerTile.add(l);
         if(tile.getOwner() == null)
             tile.setOwner(sender.getUniqueId());

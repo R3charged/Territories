@@ -24,40 +24,12 @@ import java.util.regex.Pattern;
 
 public abstract class TileCommand extends TerritoryCommand {
 
-    protected Loc loc;
+    public abstract void execute(Player sender, Loc loc);
 
-    private Argument locArg = new LocArgument("Chunk");
-
-    private Argument worldArg = new StringArgument("World").replaceSuggestions(sender -> {
-        // List of world names on the server
-        return Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
-    });
-
-    public TileCommand(String commandName) {
-        super(commandName);
-    }
-
-    @Override
-    protected void castArgs(HashMap<String, Object> map) {
-        try {
-            loc = new Loc((int) map.get("X"), (int) map.get("Z"), (String) map.get("World"));
-        } catch (NullPointerException e) {
-            Chunk c = sender.getLocation().getChunk();
-            loc = new Loc(c.getX(), c.getZ(), c.getWorld().getName());
-        }
+    public void execute(Player sender) {
+        execute(sender, new Loc(sender.getLocation().getChunk()));
     }
 
 
-    private static Argument worldArgument(String nodeName) {
-
-        // Construct our CustomArgument that takes in a String input and returns a World object
-        return new CustomArgument<String>(nodeName, info -> {
-            // Parse the world from our input
-            return "sd";
-        }).replaceSuggestions(sender -> {
-            // List of world names on the server
-            return Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
-        });
-    }
 
 }

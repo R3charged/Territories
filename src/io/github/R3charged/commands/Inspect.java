@@ -2,35 +2,33 @@ package io.github.R3charged.commands;
 
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Loc;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.entity.Player;
 
 public class Inspect extends TileCommand {
 
     private final String line = "----------------------------";
 
-    public Inspect(String commandName) {
-        super(commandName);
-    }
-
-    @Override
-    protected boolean exeCmd() {
-
+    public void execute(Player sender, Loc loc) {
         Tile tile = Tile.get(loc);
         if(tile instanceof PlayerTile){
             PlayerTile ptile = (PlayerTile) tile;
             sender.sendMessage(loc.getX() + " " + loc.getZ() + " " + loc.getWorld() + "\n" +
                     "V: " + ptile.getValue());
             //sender.spigot().sendMessage(message(ptile));
-            return true;
         }
-        return false;
-
-
     }
 
-    private TextComponent button(String buttonName, String command){
+
+
+    //*********************************************************************
+    // HELPER METHODS
+    //*********************************************************************
+
+    private TextComponent button(Loc loc, String buttonName, String command){
         TextComponent btn = new TextComponent(ChatColor.BOLD + buttonName);
         btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                 "/" + command +" "+loc.getX()+" "+loc.getZ()+" "+loc.getWorld()));

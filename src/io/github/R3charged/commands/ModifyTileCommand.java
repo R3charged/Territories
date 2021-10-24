@@ -3,62 +3,52 @@ package io.github.R3charged.commands;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import io.github.R3charged.enums.Select;
+import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
 
-    private Select select;
+    protected Function<T, Boolean> executor;
 
-
-
-    public ModifyTileCommand(String commandName) {
-        super(commandName);
-        addDefault("Select",defaultOption());
-    }
-
-    @Override
-    protected void castArgs(HashMap<String, Object> map) {
-        super.castArgs(map);
-        select = (Select) map.get("Select");
-    }
-
-    /**
-     * Method for executing command. Returns true when command has successfully executed.
-     * Returns false if conditions do not pass.
-     * @param tile target tile
-     * @return true on sucessful execution
-     */
-    protected abstract boolean exeCmd(T tile);
-
-    protected boolean exeCmd(){
+    public void execute(Player sender, Loc loc, Select select) {
         try {
             switch (select) {
                 case ALL:
-                    return doAll();
+                    doAll();
+                    break;
                 case THIS:
-                    return doThis();
+                    doThis(sender, loc);
+                    break;
                 case FILL:
-                    return doFill(loc.getX(), loc.getZ(), true);
+                    doFill(sender, loc, loc.getX(), loc.getZ(), true);
+                    break;
             }
         } catch (ClassCastException cce) {
-            Chat.error(sender ,"This command cannot be used on this chunk.");
-            return false;
+            Chat.error(sender, "This command cannot be used on this chunk.");
         }
-        return true;
     }
 
-    private boolean doThis() {
+    @Override
+    public void execute(Player sender, Loc loc) {
+        execute(sender, loc, defaultOption());
+    }
+
+
+    private boolean doThis(Player sender, Loc loc) {
         T t = (T) Tile.get(loc);
 
         if(t.canModify(sender.getUniqueId())) {
-            return exeCmd(t);
+            return executor.apply(t);
         }
         return false;
     }
@@ -74,16 +64,22 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
         return false;
     }
 
-    private boolean doFill(int x,int z, boolean origin) {
-        T tile = (T) Tile.get(new Loc(x,z,loc.getWorld()));
-        if(tile != null && tile.canModify(sender.getUniqueId()) && exeCmd(tile)) { //TODO conditions need to be change
-            doFill(x+1,z, false);
-            doFill(x-1,z, false);
-            doFill(x,z+1, false);
-            doFill(x,z-1, false);
+    private boolean doFill(Player sender, Loc loc, int x,int z, boolean origin) {
+        T tile;
+        try {
+            tile = (T) Tile.get(new Loc(x, z, loc.getWorld()));
+        } catch (ClassCastException e) {
+            return false;
+        }
+
+        if(tile != null && tile.canModify(sender.getUniqueId()) && executor.apply(tile)) { //TODO conditions need to be change
+            doFill(sender, loc, x+1,z, false);
+            doFill(sender, loc, x-1,z, false);
+            doFill(sender, loc, x,z+1, false);
+            doFill(sender, loc, x,z-1, false);
         }
         else if (!origin && (tile == null || tile.canModify(sender.getUniqueId()))) {
-            doEdge(new Loc(x,z,loc.getWorld()));
+            doEdge(sender, new Loc(x,z,loc.getWorld()));
         }
         else if(origin) {
             return false;
@@ -95,14 +91,9 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
         return Select.THIS;
     }
 
-    protected void doEdge(Loc l) {
+    protected void doEdge(Player sender, Loc l) {
         //empty
     }
 
-    @Override
-    public ModifyTileCommand withArguments(Argument... args) {
-        super.withArguments(args);
-        return this;
-    }
 
 }

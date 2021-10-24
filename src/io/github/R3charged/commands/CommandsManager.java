@@ -2,13 +2,16 @@ package io.github.R3charged.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
+import dev.jorel.commandapi.executors.CommandExecutor;
 import io.github.R3charged.commands.modify.Claim;
 import io.github.R3charged.commands.modify.Settings;
 import io.github.R3charged.commands.modify.Transfer;
 import io.github.R3charged.contest.ContestCommand;
 import io.github.R3charged.enums.Select;
+import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +23,11 @@ public class CommandsManager {
     private static Argument z = new IntegerArgument("Z");
     private static Argument world = worldArgument("World");
 
+    private static Map map = new Map();
+    private static Inspect inspect = new Inspect();
+
+    private static Claim claim = new Claim();
+
     private static Argument select = new CustomArgument<Select>("Select", info -> {
         String s = info.input();
         try {
@@ -30,106 +38,94 @@ public class CommandsManager {
         }
         return null;
     }).replaceSuggestions(sender -> {
-        return getValues(Select.values());
+        return new String[] {"This","Fill", "All"};
     });
 
 
     public static void register() {
+        CommandAPICommand master = create((TerritoryCommand) inspect, "territory");
 
-        new Map("map").withArguments(x,z,world).register();
-        new Map("map").register();
+        ArrayList<CommandAPICommand> subCmds = new ArrayList<>();
+
         //**************************************************
         //TILE COMMANDS
         //**************************************************
-        List<CommandAPICommand> cmds = new ArrayList<CommandAPICommand>();
-        cmds.add(new Map("map").withArguments(x,z,world));
-        cmds.add(new Map("map"));
-
-
-        new Inspect("tile").withArguments(x,z,world).register();
-        CommandAPICommand master = new Inspect("tile");
-
-
-
-
-        new ContestCommand("challenge").register();
+        create(inspect, "territory").register();
+        createWithoutWorld(inspect, "territory").register();
+        addCmd(subCmds, map, "map");
 
         //**************************************************
         //MODIFY COMMANDS
         //**************************************************
-        new Claim("claim").withArguments(select,x,z,world).register();
-        new Claim("claim").withArguments(x,z,world).register();
-        new Claim("claim").withArguments(select).register();
-        new Claim("claim").register();
 
-        cmds.addAll(of(new Claim("claim")));
-
-        of((ModifyTileCommand) new Transfer("transfer")
-                .withArguments(new PlayerArgument("Recipient")));
-
-        //**************************************************
-        //CONFIG COMMAND
-        //**************************************************
-        List<CommandAPICommand> settings = new ArrayList<>();
-        settings.addAll(of(new Settings("Explosions")
-                .withArguments(new BooleanArgument("Boolean"))));
-        settings.addAll(of(new Settings("Color")
-                .withArguments(new ChatColorArgument("Color"))));
-
-        CommandAPICommand config = new CommandAPICommand("set");
-        config.setSubcommands(settings);
-        cmds.add(config);
 
         //**************************************************
         //TERRITORY MASTER COMMAND
         //**************************************************
-        master.setSubcommands(cmds);
+        master.setSubcommands(subCmds);
         master.register();
 
         //**************************************************
         //RELATION COMMANDS
         //**************************************************
 
+
+        //**************************************************
+
+
     }
 
-    private static void registerAllOptions(ModifyTileCommand cmd) {
-        for(CommandAPICommand command : of(cmd)) {
-            command.register();
-        }
+    private static CommandAPICommand create(String name, CommandExecutor executor, Argument... args) {
+        return new CommandAPICommand(name).executes(executor).withArguments(args);
     }
 
-    private static List<CommandAPICommand> of(ModifyTileCommand cmd) {
-
-        System.out.println(cmd.getName());
-        for( Argument arg: cmd.getArguments()) {
-            System.out.println(arg.getNodeName());
-        }
-        System.out.println();
-
-        ArrayList<CommandAPICommand> list = new ArrayList<>();
-
-            list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select,x,z,world));
-            list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(x,z,world));
-            list.add(((ModifyTileCommand) cmd.duplicate()).withArguments(select));
-            list.add(cmd);
-
-            for(CommandAPICommand t : list) {
-                System.out.println(t.getName());
-                for( Argument arg: t.getArguments()) {
-                    System.out.println(arg.getNodeName());
-                }
-                System.out.println();
-            }
-
-        return list;
+    private static CommandAPICommand create(TerritoryCommand cmd, String name) {
+        return new CommandAPICommand(name).executes((sender, args) -> {
+            cmd.execute((Player) sender);
+        });
     }
 
-    private static <O> String[] getValues(O[] o) {
-        String[] arr = new String[o.length];
-        for(int i = 0; i < o.length; i++) {
-            arr[i] = o[i].toString();
-        }
-        return arr;
+    private static CommandAPICommand create(TileCommand cmd, String name) {
+        return new CommandAPICommand(name).executes((sender, args) -> {
+            cmd.execute((Player) sender, getLoc(args[0], args[1], args[2]));
+        }).withArguments(x,z,world);
+    }
+
+    private static CommandAPICommand createWithoutWorld(TileCommand cmd, String name) {
+        return new CommandAPICommand(name).executes((sender, args) -> {
+            cmd.execute((Player) sender, getLoc(args[0], args[1], ((Player) sender).getWorld().getName()));
+        }).withArguments(x,z);
+    }
+
+    private static void addCmd(List<CommandAPICommand> list, TerritoryCommand cmd, String name) {
+        list.add(create(cmd, name));
+    }
+
+    private static void addCmd(List<CommandAPICommand> list, TileCommand cmd, String name) {
+        list.add(create(cmd, name));
+        list.add(createWithoutWorld(cmd, name));
+        addCmd(list, (TerritoryCommand) cmd, name);
+    }
+
+    public static void addCmd(List<CommandAPICommand> list, ModifyTileCommand cmd, String name) {
+        list.add(create(name, (S, A) -> {
+            cmd.execute((Player) S, getLoc(A[1], A[2], A[3]), (Select) A[0]);
+        }, select, x, z, world));
+        list.add(create(name, (S, A) -> {
+            cmd.execute((Player) S, getLoc(A[1], A[2], ((Player) S).getWorld().getName()), (Select) A[0]);
+        }, select, x, z));
+        addCmd(list, (TileCommand) cmd, name);
+    }
+
+    public static void addCmd(List<CommandAPICommand> list, Settings cmd, String name) {
+        list.add(create(name, (S, A) -> {
+            cmd.execute((Player) S, getLoc(A[1], A[2], A[3]), (Select) A[0]);
+        }, select, x, z, world));
+    }
+
+
+    private static Loc getLoc(Object x, Object z, Object world) {
+        return new Loc((int) x, (int) z, (String) world);
     }
 
     private static Argument worldArgument(String nodeName) {

@@ -13,6 +13,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
 
 public class Map extends TileCommand {
 
@@ -22,13 +23,8 @@ public class Map extends TileCommand {
     private final int MAP_WIDTH = Config.getInt("map-width"); //29;
     private final int MAP_HEIGHT = Config.getInt("map-height"); //13;
 
-    public Map(String commandName) {
-        super(commandName);
-    }
-
-    @Override
-    protected boolean exeCmd() {
-        TextComponent[][] arr = getMapArray(loc.getX() - (MAP_WIDTH/2),loc.getZ() - (MAP_HEIGHT/2));
+    public void execute(Player sender, Loc loc) {
+        TextComponent[][] arr = getMapArray(sender, loc, loc.getX() - (MAP_WIDTH/2),loc.getZ() - (MAP_HEIGHT/2));
         TextComponent message = new TextComponent(ChatColor.UNDERLINE+"Map                                                   ");
         for(int j = 0; j < MAP_HEIGHT; j++) {
             message.addExtra("\n");
@@ -37,7 +33,6 @@ public class Map extends TileCommand {
             }
         }
         sender.spigot().sendMessage(message);
-        return true;
     }
 
     /**
@@ -46,24 +41,24 @@ public class Map extends TileCommand {
      * @param z furthest lower z coord of the map.
      * @return
      */
-    private TextComponent[][] getMapArray(int x, int z) {
+    private TextComponent[][] getMapArray(Player sender, Loc loc, int x, int z) {
         TextComponent[][] arr = new TextComponent[MAP_HEIGHT][MAP_WIDTH];
         for (int j = 0; j < MAP_HEIGHT; j++) {
             for (int i = 0; i < MAP_WIDTH; i++) {
-                arr[j][i] = drawTile(new Loc(x + i,z + j, loc.getWorld()));
+                arr[j][i] = drawTile(sender, new Loc(x + i,z + j, loc.getWorld()));
             }
         }
         //Center
         arr[MAP_HEIGHT/2][MAP_WIDTH/2].setText("✦");
         //Compass
-        addCompass(arr);
+        addCompass(sender, arr);
         return arr;
     }
 
-    private TextComponent drawTile(Loc l) {
+    private TextComponent drawTile(Player sender, Loc l) {
         Tile t = Tile.get(l);
         if(t instanceof PlayerTile) {
-            return drawTile((PlayerTile) t);
+            return drawTile(sender, (PlayerTile) t);
         } else if(t instanceof RestrictedTile) {
             return drawTile((RestrictedTile) t);
         } else { //null case
@@ -73,7 +68,7 @@ public class Map extends TileCommand {
         }
     }
 
-    private TextComponent drawTile(PlayerTile t) {
+    private TextComponent drawTile(Player sender, PlayerTile t) {
         TextComponent tile = new TextComponent(TILE_CHAR);
 
         switch(t.getStatus()) {
@@ -96,7 +91,8 @@ public class Map extends TileCommand {
         tile.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT,
                 new Text(t.getLoc().getX()+","+t.getLoc().getZ()  +"\n" +
                         Bukkit.getOfflinePlayer(t.getOwner()).getName()+ " V: " + t.getValue())));
-        tile.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/inspect "+t.getLoc().getX()+" "+t.getLoc().getZ()+" "+loc.getWorld()));
+        tile.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/inspect "+
+                t.getLoc().getX()+" "+t.getLoc().getZ()+" "+t.getLoc().getWorld()));
         return tile;
     }
 
@@ -106,7 +102,7 @@ public class Map extends TileCommand {
         return tile;
     }
 
-    private void addCompass(TextComponent[][] arr)
+    private void addCompass(Player sender, TextComponent[][] arr)
     {
         arr[0][1].setText(ChatColor.DARK_GRAY + "N.");
         arr[1][0].setText(ChatColor.DARK_GRAY + "W.");

@@ -4,6 +4,7 @@ import io.github.R3charged.collections.ProfileMap;
 import io.github.R3charged.utility.Coords;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -30,6 +31,8 @@ public class Profile {
     public static Profile get(UUID uuid) {
         return ProfileMap.get().get(uuid);
     }
+
+    public static Profile get(Player player) {return get(player.getUniqueId());}
 
     public static Profile add(UUID uuid) {
         if(!ProfileMap.get().containsKey(uuid)) {
@@ -87,6 +90,14 @@ public class Profile {
 
     public boolean hasFriended(UUID u) {
         return friends.contains(u);
+    }
+
+    public boolean hasFriended(Player p) {
+        return hasFriended(p.getUniqueId());
+    }
+
+    public HashSet<UUID> getFriends() {
+        return friends;
     }
 
     public void addFriend(UUID u) {
