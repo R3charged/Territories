@@ -3,18 +3,13 @@ package io.github.R3charged.contest;
 import io.github.R3charged.commands.TileCommand;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.Tile;
+import io.github.R3charged.utility.Loc;
+import org.bukkit.entity.Player;
 
 public class ContestCommand extends TileCommand {
-    public ContestCommand(String commandName) {
-        super(commandName);
-    }
 
     @Override
-    protected boolean exeCmd() {
-        if(Tile.get(loc) instanceof PlayerTile) {
-            PlayerTile tile = (PlayerTile) Tile.get(loc);
-            new ContestGui(sender, tile);
-        }
-        return true;
+    public void execute(Player sender, Loc loc) {
+
     }
 }

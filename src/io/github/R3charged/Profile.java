@@ -23,10 +23,10 @@ public class Profile {
     private ChatColor mapColor;
     private Date lastLostContest;
 
-    private LinkedList<Loc> ownedTiles = new LinkedList<>();
+    private ArrayList<Loc> ownedTiles = new ArrayList<>();
     private HashSet<UUID> friends = new HashSet<>();
 
-    private LinkedList<ItemStack> wagerWinnings;
+    private ArrayList<ItemStack> wagerWinnings;
 
     public static Profile get(UUID uuid) {
         return ProfileMap.get().get(uuid);
@@ -110,5 +110,9 @@ public class Profile {
 
     public boolean isOverride(){
         return override;
+    }
+
+    public void setOffline() {
+        onlineProfile = null;
     }
 }

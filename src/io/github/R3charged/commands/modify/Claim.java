@@ -5,6 +5,7 @@ import io.github.R3charged.commands.ModifyTileCommand;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
+import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
@@ -26,9 +27,7 @@ public class Claim extends MapWrapper {
 
     @Override
     protected void doEdge(Player sender, Loc l) {
-        PlayerTile tile = PlayerTile.add(l);
-        if(tile.getOwner() == null)
-            tile.setOwner(sender.getUniqueId());
+        PlayerTile tile = (PlayerTile) Tile.get(l, sender, 100);
         if(tile.isFree())
             tile.setStatus(Status.PAD);
 

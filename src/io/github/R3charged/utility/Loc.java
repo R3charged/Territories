@@ -22,6 +22,13 @@ public class Loc { //location
         world = chunk.getWorld().getName();
     }
 
+    public Loc(Location l) {
+        Chunk c = l.getChunk();
+        x = c.getX();
+        z = c.getZ();
+        world = c.getWorld().getName();
+    }
+
     public int getX() {
         return x;
     }

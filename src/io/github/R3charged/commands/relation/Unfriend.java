@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class Unfriend {
+public class Unfriend extends RelCommand{
 
 
     protected boolean exeCmd(Player sender, Player friend) { //TODO
@@ -23,5 +23,28 @@ public class Unfriend {
         Profile.get(sender.getUniqueId()).removeFriend(friend.getUniqueId());
         Profile.get(friend.getUniqueId()).removeFriend(sender.getUniqueId());
         return true;
+    }
+
+    @Override
+    public void execute(Player sender, Player friend) {
+        Profile sen = Profile.get(sender);
+        Profile fren = Profile.get(friend);
+
+        if (sender.equals(friend)) {
+            Chat.error(sender, "You cannot be your own friend.");
+        }
+
+        if (sen.hasFriended(friend)) {
+            if (fren.hasFriended(sender)) { //Both are friends
+                Chat.success(sender, "You have unfriended " + friend.getName());
+            } else { //Sender has sent a request friend
+                Chat.success(sender, "You have revoked your friend request.");
+            }
+            sen.removeFriend(friend.getUniqueId());
+        } else if (fren.hasFriended(sender)) { //Friend has sent a request to Sender
+
+        } else { //Neither has sent friend request
+
+        }
     }
 }

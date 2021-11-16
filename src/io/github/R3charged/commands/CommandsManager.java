@@ -136,4 +136,12 @@ public class CommandsManager {
             return Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
         });
     }
+
+    public static Claim getClaim() {
+        return claim;
+    }
+
+    public static Map getMap() {
+        return map;
+    }
 }

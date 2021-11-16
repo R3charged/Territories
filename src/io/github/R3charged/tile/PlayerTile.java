@@ -7,6 +7,7 @@ import io.github.R3charged.utility.Loc;
 import io.github.R3charged.enums.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,17 +24,20 @@ public class PlayerTile extends Tile {
 
     private transient boolean inContest = false;
 
-    public static PlayerTile add(Loc i) {
-        HashMap<Loc, Tile> map = TileMap.get();
-        if(!map.containsKey(i)) {
-            Chat.debug("Tile added.");
-            map.put(i,new PlayerTile(i));
-        }
-        return (PlayerTile) map.get(i);
+    public PlayerTile(Loc l, Player p) {
+        super(l);
+        owner = p.getUniqueId();
+        setTitle(getOwnerName()+"'s Territory");
+        time = Profile.get(p).getOnline().updateTimer();
+        status = Status.FREE;
+        lastVisited = new Date();
     }
 
-    public PlayerTile(Loc l) {
+    public PlayerTile(Loc l, Player p, int time) {
         super(l);
+        owner = p.getUniqueId();
+        setTitle(getOwnerName()+"'s Territory");
+        this.time = time;
         status = Status.FREE;
         lastVisited = new Date();
     }
@@ -43,20 +47,20 @@ public class PlayerTile extends Tile {
     }
 
     public void setOwner(UUID u) {
-        if(owner != null)
         Profile.get(owner).removeTile(getLoc());
         owner = u;
         Profile.get(owner).addTile(getLoc());
+        setTitle(getOwnerName()+"'s Territory");
     }
 
     /**
      * Adds or removes time based on relation to tile owner
      */
-    public void affectTime(UUID u) {
-        affectTime(u, Profile.get(u).getOnline().updateTimer());
+    public void update(UUID u) {
+        update(u, Profile.get(u).getOnline().updateTimer());
     }
 
-    private void affectTime(UUID u, long ms){ //helper method for actual affectTime
+    void update(UUID u, long ms){ //helper method for actual affectTime
         if(inContest) {
             return;
         }
@@ -169,14 +173,6 @@ public class PlayerTile extends Tile {
     @Override
     public void setColor(ChatColor color) {
         Profile.get(owner).setMapColor(color);
-    }
-
-    @Override
-    public String getTitle(){
-        if(super.getTitle() == null) {
-            return getOwnerName()+"'s Territory";
-        }
-        return super.getTitle();
     }
 
     /**

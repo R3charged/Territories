@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class TileMap {
@@ -30,6 +31,10 @@ public class TileMap {
      */
     public static HashMap<Loc, Tile> get() {
         return tileMap;
+    }
+
+    public static int get(int x, int z, String world) { //TODO maybe?
+        return Objects.hash(x,z,world);
     }
 
     public static void makeDirectories() {
