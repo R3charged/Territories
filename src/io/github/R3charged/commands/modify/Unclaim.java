@@ -1,17 +1,18 @@
 package io.github.R3charged.commands.modify;
 
-import io.github.R3charged.commands.Map;
-import io.github.R3charged.commands.ModifyTileCommand;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.enums.Status;
 import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.entity.Player;
 
-public class Unclaim extends MapWrapper {
+import java.util.function.Function;
 
-    public void execute(Player sender, Loc loc, Select select) {
-        executor = tile -> {
+public class Unclaim extends MapModifier {
+
+    @Override
+    protected Function<PlayerTile, Boolean> getExecutor(Player sender, Loc loc, Select select) {
+        return tile -> {
             if(!tile.isFree()) {
                 tile.setStatus(Status.FREE);
                 return true;
@@ -19,6 +20,4 @@ public class Unclaim extends MapWrapper {
             return false;
         };
     }
-
-
 }

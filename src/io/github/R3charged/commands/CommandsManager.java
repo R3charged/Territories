@@ -4,6 +4,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import io.github.R3charged.commands.modify.Claim;
+import io.github.R3charged.commands.modify.MapModifier;
 import io.github.R3charged.commands.modify.Settings;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.utility.Loc;
@@ -72,6 +73,7 @@ public class CommandsManager {
 
     }
 
+
     private static CommandAPICommand create(String name, CommandExecutor executor, Argument... args) {
         return new CommandAPICommand(name).executes(executor).withArguments(args);
     }
@@ -87,6 +89,7 @@ public class CommandsManager {
             cmd.execute((Player) sender, getLoc(args[0], args[1], args[2]));
         }).withArguments(x,z,world);
     }
+
 
     private static CommandAPICommand createWithoutWorld(TileCommand cmd, String name) {
         return new CommandAPICommand(name).executes((sender, args) -> {
