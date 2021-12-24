@@ -1,16 +1,12 @@
 package io.github.R3charged.tile;
 
 import io.github.R3charged.Profile;
-import io.github.R3charged.collections.TileMap;
-import io.github.R3charged.utility.Chat;
-import io.github.R3charged.utility.Loc;
 import io.github.R3charged.enums.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerTile extends Tile {
@@ -24,8 +20,7 @@ public class PlayerTile extends Tile {
 
     private transient boolean inContest = false;
 
-    public PlayerTile(Loc l, Player p) {
-        super(l);
+    public PlayerTile(Player p) {
         owner = p.getUniqueId();
         setTitle(getOwnerName()+"'s Territory");
         time = Profile.get(p).getOnline().updateTimer();
@@ -33,8 +28,7 @@ public class PlayerTile extends Tile {
         lastVisited = new Date();
     }
 
-    public PlayerTile(Loc l, Player p, int time) {
-        super(l);
+    public PlayerTile(Player p, int time) {
         owner = p.getUniqueId();
         setTitle(getOwnerName()+"'s Territory");
         this.time = time;
@@ -47,9 +41,7 @@ public class PlayerTile extends Tile {
     }
 
     public void setOwner(UUID u) {
-        Profile.get(owner).removeTile(getLoc());
         owner = u;
-        Profile.get(owner).addTile(getLoc());
         setTitle(getOwnerName()+"'s Territory");
     }
 
@@ -87,7 +79,7 @@ public class PlayerTile extends Tile {
         this.inContest = inContest;
     }
 
-    public boolean addContestDecay(int take) {
+    public boolean addContestDecay(double take) {
         contestDecay += take * 1000; //sec to ms
         if(getValue() <= 0) {
             return true;

@@ -19,7 +19,7 @@ public class Contest {
     private PlayerTile tile;
     private Player owner = Bukkit.getPlayer(tile.getOwner());
     private Player player;
-    private int takeRate;
+    private double takeRate;
 
     private int time;
     private int taskID;
@@ -38,7 +38,7 @@ public class Contest {
     };
 
     
-    public Contest(Player player, PlayerTile tile, int takeRate) {
+    public Contest(Player player, PlayerTile tile, double takeRate) {
         time = CONTEST_DURATION;
         this.player = player;
         this.tile = tile;
@@ -63,6 +63,6 @@ public class Contest {
     }
 
     private boolean isPresent(Player p) {
-        return new Loc(p.getLocation().getChunk()).equals(tile.getLoc());
+        return Tile.get(p.getLocation()).equals(this);
     }
 }

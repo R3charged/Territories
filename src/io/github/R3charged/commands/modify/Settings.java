@@ -6,6 +6,7 @@ import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Loc;
 import io.github.R3charged.utility.Setter;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Settings extends ModifyTileCommand {
     }
 
 
-    public void execute(Player sender, Loc loc, Select select, String setting, Object arg) {
+    public void execute(Player sender, Chunk chunk, Select select, String setting, Object arg) {
         Function<Tile, Boolean> function = t -> {
             if (t.canModify(sender.getUniqueId())) {
                 settings.get(setting).execute(t, sender, arg);
@@ -32,10 +33,10 @@ public class Settings extends ModifyTileCommand {
             return false;
         };
         executor = function;
-        super.execute(sender, loc, select);
+        super.execute(sender, chunk, select);
     }
 
-    public void execute(Player sender, Loc loc, Select select) {
+    public void execute(Player sender, Chunk chunk, Select select) {
         sender.sendMessage("Please indicate what setting to change.");
     }
 

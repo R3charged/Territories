@@ -27,7 +27,7 @@ public class ProtectionListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         UUID u = e.getPlayer().getUniqueId();
-        Tile t = Tile.get(new Loc(e.getBlock().getChunk()));
+        Tile t = Tile.get(e.getBlock().getChunk());
         if(t == null) {
             return;
         }
@@ -40,7 +40,7 @@ public class ProtectionListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         UUID u = e.getPlayer().getUniqueId();
-        Tile t = Tile.get(new Loc(e.getBlock().getChunk()));
+        Tile t = Tile.get(e.getBlock().getChunk());
         if(t == null) {
             return;
         }
@@ -57,7 +57,7 @@ public class ProtectionListener implements Listener {
             return;
         if(! (e.getInventory().getType() == InventoryType.CHEST|| e.getInventory().getType() == InventoryType.DISPENSER)) //TODO add more types
             return;
-        Tile t = Tile.get(new Loc(e.getInventory().getLocation().getChunk()));
+        Tile t = Tile.get(e.getInventory().getLocation());
         if(t == null) {
             return;
         }
@@ -126,7 +126,7 @@ public class ProtectionListener implements Listener {
     }
 
     private boolean canInteract(UUID u, Entity interacted) {
-        Tile t = Tile.get(new Loc(interacted.getLocation().getChunk()));
+        Tile t = Tile.get(interacted.getLocation());
         if (t == null) {
             return true;
         }

@@ -6,17 +6,18 @@ import io.github.R3charged.utility.Loc;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 public class Inspect extends TileCommand {
 
     private final String line = "----------------------------";
 
-    public void execute(Player sender, Loc loc) {
-        Tile tile = Tile.get(loc);
+    public void execute(Player sender, Chunk chunk) {
+        Tile tile = Tile.get(chunk);
         if(tile instanceof PlayerTile){
             PlayerTile ptile = (PlayerTile) tile;
-            sender.sendMessage(loc.getX() + " " + loc.getZ() + " " + loc.getWorld() + "\n" +
+            sender.sendMessage(chunk.getX() + " " + chunk.getZ() + " " + chunk.getWorld() + "\n" +
                     "V: " + ptile.getValue());
             //sender.spigot().sendMessage(message(ptile));
         }
@@ -28,10 +29,10 @@ public class Inspect extends TileCommand {
     // HELPER METHODS
     //*********************************************************************
 
-    private TextComponent button(Loc loc, String buttonName, String command){
+    private TextComponent button(Chunk chunk, String buttonName, String command){
         TextComponent btn = new TextComponent(ChatColor.BOLD + buttonName);
         btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                "/" + command +" "+loc.getX()+" "+loc.getZ()+" "+loc.getWorld()));
+                "/" + command +" "+chunk.getX()+" "+chunk.getZ()+" "+chunk.getWorld()));
         return btn;
     }
 

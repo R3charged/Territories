@@ -9,6 +9,8 @@ import io.github.R3charged.commands.modify.Settings;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -124,8 +126,8 @@ public class CommandsManager {
     }
 
 
-    private static Loc getLoc(Object x, Object z, Object world) {
-        return new Loc((int) x, (int) z, (String) world);
+    private static Chunk getLoc(Object x, Object z, Object world) {
+        return Bukkit.getWorld((String) world).getChunkAt((int) x, (int) z);
     }
 
     private static Argument worldArgument(String nodeName) {

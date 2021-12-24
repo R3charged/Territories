@@ -11,7 +11,6 @@ public class RestrictedTile extends Tile {
     private boolean openBuilding;
 
     public RestrictedTile(Loc l) {
-        super(l);
         openBuilding = false;
     }
 

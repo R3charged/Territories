@@ -10,6 +10,7 @@ import io.github.R3charged.utility.Chat;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,10 +25,10 @@ import java.util.regex.Pattern;
 
 public abstract class TileCommand extends TerritoryCommand {
 
-    public abstract void execute(Player sender, Loc loc);
+    public abstract void execute(Player sender, Chunk chunk);
 
     public void execute(Player sender) {
-        execute(sender, new Loc(sender.getLocation().getChunk()));
+        execute(sender, sender.getLocation().getChunk());
     }
 
 

@@ -1,7 +1,6 @@
 package io.github.R3charged.listeners;
 
 import io.github.R3charged.Profile;
-import io.github.R3charged.collections.TileMap;
 import io.github.R3charged.commands.CommandsManager;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.enums.Status;
@@ -9,7 +8,6 @@ import io.github.R3charged.tile.PlayerTile;
 import io.github.R3charged.tile.RestrictedTile;
 import io.github.R3charged.tile.Tile;
 import io.github.R3charged.utility.Chat;
-import io.github.R3charged.utility.Loc;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Chunk;
@@ -30,12 +28,12 @@ public class TileListener implements Listener {
         if(e.getFrom().getChunk() == e.getTo().getChunk()) {
             return;
         }
-        Tile temp = Tile.get(e.getFrom(), e.getPlayer());
+        Tile temp = Tile.get(e.getFrom().getChunk(), e.getPlayer());
         if (temp instanceof PlayerTile) {
             PlayerTile tile = (PlayerTile) temp;
             if(tile.getStatus().equals(Status.PAD)) { // AUTO EXPANSION
                 Chunk from = e.getFrom().getChunk();
-                CommandsManager.getClaim().execute(e.getPlayer(), new Loc(e.getFrom()), Select.THIS);
+                CommandsManager.getClaim().executeWithoutMap(e.getPlayer(), e.getFrom().getChunk(), Select.THIS);
             }
 
 
@@ -56,7 +54,6 @@ public class TileListener implements Listener {
             }
 
             Chat.debug("Left " + tile.getValue());
-            TileMap.serialize();
         } else if (temp instanceof RestrictedTile) {
 
         }
