@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="Territories:jar">
-    <output-path>D:/Users/ardeu/Desktop/Local Spigot/plugins</output-path>
+    <output-path>D:/Users/ardeu/Desktop/Local Spigot 1.18/plugins</output-path>
     <root id="archive" name="Territories.jar">
       <element id="module-output" name="Territories" />
       <element id="file-copy" path="D:/Users/ardeu/Desktop/Local Spigot/spigot.jar" />

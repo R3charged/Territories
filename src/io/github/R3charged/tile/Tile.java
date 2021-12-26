@@ -3,6 +3,7 @@ package io.github.R3charged.tile;
 import io.github.R3charged.PersistentData.TileDataType;
 import io.github.R3charged.Profile;
 import io.github.R3charged.Territories;
+import io.github.R3charged.utility.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -34,6 +35,10 @@ public abstract class Tile implements Serializable {
             UUID uuid = p.getUniqueId();
             ((PlayerTile) tile).update(uuid);
         }
+        Chat.debug(((PlayerTile) Tile.get(c)).getValue() + "");
+        ((PlayerTile) Tile.get(c)).update(p.getUniqueId(), 10000);
+        Chat.debug( "" + ((PlayerTile) Tile.get(c)).getValue());
+
         return tile;
     }
     public static Tile get(Chunk c, Player p, int time) {

@@ -1,7 +1,7 @@
 package io.github.R3charged.PersistentData;
 
 import io.github.R3charged.tile.Tile;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 

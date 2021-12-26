@@ -14,12 +14,16 @@ public class Inspect extends TileCommand {
     private final String line = "----------------------------";
 
     public void execute(Player sender, Chunk chunk) {
+        sender.sendMessage("INSPECT");
         Tile tile = Tile.get(chunk);
+
         if(tile instanceof PlayerTile){
             PlayerTile ptile = (PlayerTile) tile;
             sender.sendMessage(chunk.getX() + " " + chunk.getZ() + " " + chunk.getWorld() + "\n" +
                     "V: " + ptile.getValue());
             //sender.spigot().sendMessage(message(ptile));
+        } else {
+            sender.sendMessage("Not a playertile");
         }
     }
 
