@@ -79,6 +79,7 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
             doFill(sender, loc, x,z-1, false);
         }
         else if (!origin && (tile == null || tile.canModify(sender.getUniqueId()))) {
+            sender.sendMessage("oopsie");
             doEdge(sender, new Loc(x,z,loc.getWorld()));
         }
         else if(origin) {
@@ -92,6 +93,7 @@ public abstract class ModifyTileCommand<T extends Tile> extends TileCommand{
     }
 
     protected void doEdge(Player sender, Loc l) {
+        sender.sendMessage("oops");
         //empty
     }
 

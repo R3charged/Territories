@@ -26,7 +26,9 @@ public class Claim extends MapModifier {
     @Override
     protected void doEdge(Player sender, Loc l) {
         PlayerTile tile = (PlayerTile) Tile.get(l, sender, 100);
-        if(tile.isFree())
+        sender.sendMessage("PAD");
+        if(tile.getStatus() != Status.CLAIM)
+
             tile.setStatus(Status.PAD);
 
     }

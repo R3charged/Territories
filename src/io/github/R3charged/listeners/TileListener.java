@@ -35,7 +35,7 @@ public class TileListener implements Listener {
             PlayerTile tile = (PlayerTile) temp;
             if(tile.getStatus().equals(Status.PAD)) { // AUTO EXPANSION
                 Chunk from = e.getFrom().getChunk();
-                CommandsManager.getClaim().execute(e.getPlayer(), new Loc(e.getFrom()), Select.THIS);
+                CommandsManager.getClaim().executeWithoutMap(e.getPlayer(), new Loc(e.getFrom()), Select.THIS);
             }
 
 
