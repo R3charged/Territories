@@ -1,0 +1,8 @@
+
+# Player Tiles
+# The value at which a player is able to claim a chunk. In milliseconds.
+claim-threshold: 30000
+
+# Map Command
+map-width: 29
+map-height: 13
