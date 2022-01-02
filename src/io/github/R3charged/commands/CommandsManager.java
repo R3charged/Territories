@@ -6,6 +6,7 @@ import dev.jorel.commandapi.executors.CommandExecutor;
 import io.github.R3charged.commands.modify.Claim;
 import io.github.R3charged.commands.modify.MapModifier;
 import io.github.R3charged.commands.modify.Settings;
+import io.github.R3charged.commands.modify.Unclaim;
 import io.github.R3charged.enums.Select;
 import io.github.R3charged.utility.Loc;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class CommandsManager {
     private static Inspect inspect = new Inspect();
 
     private static Claim claim = new Claim();
+    private static Unclaim unclaim = new Unclaim();
 
     private static Argument select = new CustomArgument<Select>("Select", info -> {
         String s = info.input();
@@ -53,6 +55,8 @@ public class CommandsManager {
         create(inspect, "territory").register();
         createWithoutWorld(inspect, "territory").register();
         addCmd(subCmds, map, "map");
+        addCmd(subCmds, claim, "claim");
+        addCmd(subCmds, unclaim, "unclaim");
 
         //**************************************************
         //MODIFY COMMANDS
