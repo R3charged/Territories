@@ -3,7 +3,13 @@ package io.github.R3charged.Tiles;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
-public abstract class Tile {
+import java.io.Serializable;
+
+public abstract class Tile implements Serializable {
+
+    public static Tile get(Chunk chunk) {
+        return TileCollection.get(chunk);
+    }
 
     private String title;
     private boolean doExplosions;
@@ -11,14 +17,10 @@ public abstract class Tile {
     public abstract ChatColor getColor();
     public abstract void setColor(ChatColor color);
 
-
-
-    public static Tile get(Chunk chunk) {
-        Tile tile = TileCollection.get().get(chunk);
-        if (tile == null) {
-
-        }
-
-        return tile;
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

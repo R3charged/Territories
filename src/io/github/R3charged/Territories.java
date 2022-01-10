@@ -1,5 +1,6 @@
 package io.github.R3charged;
 
+import io.github.R3charged.Tiles.TileCollection;
 import io.github.R3charged.collections.ProfileMap;
 import io.github.R3charged.commands.CommandsManager;
 import io.github.R3charged.listeners.MapListener;
@@ -14,14 +15,13 @@ public class Territories extends JavaPlugin {
     public void onEnable(){
         this.getDataFolder().mkdir();
         Config.initialize();
-        ProfileMap.deserialize();
+        TileCollection.initialize(this);
         new CommandsManager().register();
         registerListeners();
     }
     @Override
     public void onDisable(){
         //Fired when the server enables the plugin
-        ProfileMap.serialize();
     }
 
     public void registerListeners(){
